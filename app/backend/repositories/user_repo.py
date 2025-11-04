@@ -9,6 +9,7 @@ class UserRepo:
     @staticmethod
     def create_user(
         nome_completo : str,
+        cpf : str,
         email : str,
         senha : str,
         cidade: str,
@@ -26,6 +27,7 @@ class UserRepo:
         
         user = User(
             nome_completo=nome_completo,
+            cpf=cpf,
             email=email,
             senha=senha,
             cidade=cidade,
@@ -39,8 +41,8 @@ class UserRepo:
             foto_perfil_PATH=foto_perfil_PATH
         )
 
-        #check if user email is already in use
-        if UserRepo.get_user_by_email(email):
+        #check if user email or cpf is already in use
+        if UserRepo.get_user_by_email(email) or UserRepo.get_user_by_cpf(cpf):
             return None
 
         db.session.add(user)
@@ -59,6 +61,10 @@ class UserRepo:
     @staticmethod
     def get_user_by_telefone(telefone) -> Optional[User]:
         return User.query.filter_by(telefone=telefone).first()
+    
+    @staticmethod
+    def get_user_by_cpf(cpf) -> Optional[User]:
+        return User.query.filter_by(cpf=cpf).first()
     
     @staticmethod
     def get_all_users() -> List[User]:

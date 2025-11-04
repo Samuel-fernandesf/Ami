@@ -14,6 +14,7 @@ def create_user():
     #=========== getting data ==============
 
     nome_completo = data.get('nome_completo')
+    cpf = data.get('cpf')
     email = data.get('email')
     cidade = data.get('cidade')
     bairro = data.get('bairro')
@@ -32,6 +33,7 @@ def create_user():
 
     user : User = UserRepo.create_user(
         nome_completo=nome_completo,
+        cpf=cpf,
         email=email,
         senha=senha,
         cidade=cidade,
@@ -44,7 +46,7 @@ def create_user():
 
 
     if not user:
-        return jsonify({'message': 'Email já está em uso.'}), 400
+        return jsonify({'message': 'Email ou CPF já está em uso.'}), 400
     
     #========== preparing response ==============
     user_dict = user.to_dict()
