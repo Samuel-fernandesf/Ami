@@ -5,6 +5,9 @@
   <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white"/>
   <img src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white"/>
   <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E"/>
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Git-E34F26?style=for-the-badge&logo=git&logoColor=white"/>
 </p>
 
 
@@ -53,11 +56,11 @@ Facilitar a conexão entre **ONGs e/ou instituições locais e jovens voluntári
 ---
 ##  Equipe
 
-- **Luiz Gabriel Leli** — Estudante de TI (Instituto Federal)  
-- **Yagor Vitor Silva dos Santos** - Estudante de TI (Instituto Federal)  
-- **Marco Gramari** - Estudante de TI (Instituto Federal)
 - **Bernardo Duarte Marcelino** - Estudante de TI (Instituto Federal)
-- **Samuel Fernandes Filho** - Estudante de TI (Instituto Federal)  
+- **Luiz Gabriel Leli** — Estudante de TI (Instituto Federal)  
+- **Marco Gramari** - Estudante de TI (Instituto Federal)
+- **Samuel Fernandes Filho** - Estudante de TI (Instituto Federal)
+- **Yagor Vitor Silva dos Santos** - Estudante de TI (Instituto Federal)  
 
 ---
 
