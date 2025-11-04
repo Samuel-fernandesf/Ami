@@ -24,16 +24,13 @@ def create_app():
 
     
     #=============== Import routers ========================
-    """
-    from routes.user_routes import user_bp
-    """
 
-    
+    from routes.auth_routes import auth_bp
+
+
     #=============== Register blueprints ===================
 
-    """
-    app.register_blueprint(user_bp, url_prefix='/users')
-    """
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
 
 
 

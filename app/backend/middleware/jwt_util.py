@@ -48,7 +48,7 @@ def token_required(f):
         if not payload:
             return jsonify({'error': 'Token is invalid or expired'}), 401
 
-        user = UserDAO.get_user_by_id(payload['id'])
+        user = UserRepo.get_user_by_id(payload['id'])
         if not user:
             return jsonify({'error': 'User not found'}), 401
 

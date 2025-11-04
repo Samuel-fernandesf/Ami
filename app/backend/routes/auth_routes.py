@@ -9,6 +9,7 @@ auth_bp = Blueprint('auth_bp', __name__)
 def login():
     data = request.json
     data["password"] = str(data["password"])
+    
     if not data or not data.get('email') or not data.get('password'):
         return jsonify({'error': 'Email e senha são obrigatórios'}), 400
 
