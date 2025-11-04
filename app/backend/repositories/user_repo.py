@@ -1,7 +1,7 @@
 from extensions import db
 from typing import Optional, List
 from datetime import datetime
-from models import Usuario as User 
+from models.usuario import Usuario as User
 
 
 class UserRepo:
