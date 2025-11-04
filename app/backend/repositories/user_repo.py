@@ -1,12 +1,13 @@
 from extensions import db
-from typing import Optional, List, Dict
+from typing import Optional, List
 from datetime import datetime
-from models.user import User 
+from models import Usuario as User 
+
 
 class UserRepo:
 
     @staticmethod
-    def create(
+    def create_user(
         nome_completo : str,
         email : str,
         senha : str,
@@ -21,7 +22,7 @@ class UserRepo:
 
         habilidades: Optional[List[str]] = None,
         foto_perfil_PATH: Optional[str] = None    
-    ):
+    ) -> Optional[User]:
         
         user = User(
             nome_completo=nome_completo,
@@ -48,23 +49,23 @@ class UserRepo:
         return user
     
     @staticmethod
-    def get_user_by_id(user_id):
+    def get_user_by_id(user_id) -> Optional[User]:
         return User.query.filter_by(id=user_id).first()
     
     @staticmethod
-    def get_user_by_email(email):
+    def get_user_by_email(email) -> Optional[User]:
         return User.query.filter_by(email=email).first()
     
     @staticmethod
-    def get_user_by_telefone(telefone):
+    def get_user_by_telefone(telefone) -> Optional[User]:
         return User.query.filter_by(telefone=telefone).first()
     
     @staticmethod
-    def get_all_users():
+    def get_all_users() -> List[User]:
         return User.query.all()
     
     @staticmethod
-    def get_all_admins():
+    def get_all_admins() -> List[User]:
         return User.query.filter_by(tipo_usuario="admin").all()
     
     @staticmethod
@@ -72,8 +73,8 @@ class UserRepo:
         return User.query.filter_by(id=user_id, tipo_usuario="admin").first() is not None
     
     @staticmethod
-    def update_user(user_id, data):
-        user = UserDAO.get_user_by_id(user_id)
+    def update_user(user_id, data) -> Optional[User]:
+        user = UserRepo.get_user_by_id(user_id)
         if not user:
             return None
 
@@ -83,7 +84,7 @@ class UserRepo:
         return user
     
     @staticmethod
-    def delete_user(user_id):
+    def delete_user(user_id) -> bool:
         user = UserRepo.get_user_by_id(user_id)
         if not user:
             return False

@@ -7,6 +7,8 @@ from flask_migrate import Migrate
 migrate = Migrate()
 
 def create_app():
+
+    # =============== App Initialization ====================
     app = Flask(__name__)
     app.config.from_object(Config)
     
@@ -21,16 +23,16 @@ def create_app():
     def index():
         return jsonify({"message": "API is running"}), 200
     
-
-    
     #=============== Import routers ========================
 
     from routes.auth_routes import auth_bp
+    from routes.user_routes import user_bp
 
 
     #=============== Register blueprints ===================
 
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(user_bp, url_prefix='/users')
 
 
 

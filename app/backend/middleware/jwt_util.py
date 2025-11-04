@@ -2,8 +2,9 @@ import jwt
 from functools import wraps
 from flask import request, jsonify, current_app
 from repositories.user_repo import UserRepo
+from models.usuario import Usuario as User
 
-def generate_token(user):
+def generate_token(user: User):
     """
     Gera um token JWT com payload básico (id, is_admin).
     """
@@ -48,7 +49,7 @@ def token_required(f):
         if not payload:
             return jsonify({'error': 'Token is invalid or expired'}), 401
 
-        user = UserRepo.get_user_by_id(payload['id'])
+        user : User = UserRepo.get_user_by_id(payload['id'])
         if not user:
             return jsonify({'error': 'User not found'}), 401
 
