@@ -48,7 +48,7 @@ Facilitar a conexão entre **ONGs e/ou instituições locais e jovens voluntári
 | **Backend** | Python (Flask) |
 | **Frontend** | JavaScript (Vite) |
 | **Banco de Dados** | MySQL + SQLAlchemy |
-| **Prototipação** | Figma: https://www.figma.com/make/6G077fFrGAR3Ava8mbK2dj/Ami---Conectando-jovens--moldando-o-futuro?node-id=0-1&p=f&t=Lw8g1gABCKEl7a5J-0 |
+| **Prototipação** | [Figma](https://www.figma.com/make/6G077fFrGAR3Ava8mbK2dj/Ami---Conectando-jovens--moldando-o-futuro?node-id=0-1&p=f&t=Lw8g1gABCKEl7a5J-0) |
 | **Controle de Versão** | Git / GitHub |
 | **Outros** | HTML5, CSS3, JWT, Flask-WTF |
 
