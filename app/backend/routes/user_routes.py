@@ -33,6 +33,10 @@ def create_user():
         data_nasc = datetime.strptime(data_nasc_str, "%d-%m-%Y").date()
     except ValueError:
         return jsonify({'error': 'Formato de data inválido. Use DD-MM-YYYY.'}), 400
+    
+    if len(telefone) > 11:
+        return jsonify({'error': 'Telefone inválido. Máximo de 11 caracteres.'}), 400
+
 
     senha_hash = generate_password_hash(senha)
 
@@ -49,6 +53,7 @@ def create_user():
         habilidades=habilidades,
         foto_perfil=foto_perfil_PATH
     )
+
 
     if not user:
         return jsonify({'error': 'Email ou CPF já está em uso.'}), 400

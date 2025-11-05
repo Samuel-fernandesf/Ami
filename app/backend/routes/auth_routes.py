@@ -8,17 +8,17 @@ auth_bp = Blueprint('auth_bp', __name__)
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.json
-    data["password"] = str(data["password"])
+    data["senha"] = str(data["senha"])
     
-    if not data or not data.get('email') or not data.get('password'):
+    if not data or not data.get('email') or not data.get('senha'):
         return jsonify({'error': 'Email e senha são obrigatórios'}), 400
 
     user = UserRepo.get_user_by_email(data['email'])
 
-    if user and check_password_hash(user.password, data['password']):
+    if user and check_password_hash(user.senha, data['senha']):
         token = generate_token(user)
         user_dict = user.to_dict()
-        user_dict.pop('password', None)  # NUNCA enviar senha ao cliente
+        user_dict.pop('senha', None)  # NUNCA enviar senha ao cliente
         return jsonify({'token': token, 'user': user_dict}), 200
 
     return jsonify({'error': 'Credenciais inválidas'}), 401
