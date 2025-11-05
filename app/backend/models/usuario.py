@@ -12,7 +12,7 @@ class Usuario(db.Model):
     cidade = db.Column(db.String(100), nullable=False)
     bairro = db.Column(db.String(255), nullable=False)
     telefone = db.Column(db.String(11), nullable=False)
-    habilidades = db.Column(db.String(1024), nullable=True)
+    habilidades = db.Column(db.JSON, nullable=True)
     data_nasc = db.Column(db.Date, nullable=False)
     foto_perfil = db.Column(db.String(255), nullable=True)
     tipo_usuario = db.Column(db.String(50), nullable=False, default="regular")

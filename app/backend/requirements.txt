@@ -5,3 +5,5 @@ flask_cors
 flask-Migrate
 PyJWT
 dotenv
+cryptography
+pymysql

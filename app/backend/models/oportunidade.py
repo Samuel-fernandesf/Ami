@@ -2,7 +2,7 @@ from extensions import db
 
 class Oportunidade(db.Model):
     __tablename__ = 'oportunidade'
-
+    
     id_oportunidade = db.Column(db.Integer, primary_key=True, autoincrement=True)
     organizaçao_id = db.Column(db.Integer, db.ForeignKey('organizacao.id_organizacao'), nullable=False)
     titulo = db.Column(db.String(255), nullable=False)
@@ -14,7 +14,7 @@ class Oportunidade(db.Model):
     num_vagas = db.Column(db.Integer, nullable=False)
     requisitos = db.Column(db.String(1024), nullable=True)
     tags = db.Column(db.String(512), nullable=True)
-    status = db.Column(db.enum('aberto', 'fechado', name='status_enum'), default='aberto', nullable=False)
+    status = db.Column(db.Enum('aberto', 'fechado', name='status_enum'), default='aberto', nullable=False)
     criado_em = db.Column(db.DateTime, default=db.func.current_timestamp())
     
 

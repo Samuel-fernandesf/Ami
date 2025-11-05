@@ -2,13 +2,14 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from middleware.jwt_util import token_required
 from repositories import UserRepo
+from datetime import datetime
 from models.usuario import Usuario as User
 
 user_bp = Blueprint('user_bp', __name__)
 
 
 # ================= CREATE USER ===================
-@user_bp.route('/users', methods=['POST'])
+@user_bp.route('/', methods=['POST'])
 def create_user():
     data = request.get_json()
 
@@ -19,14 +20,19 @@ def create_user():
     cidade = data.get('cidade')
     bairro = data.get('bairro')
     telefone = data.get('telefone')
-    data_nascimento = data.get('data_nascimento')
+    data_nasc_str = data.get('data_nasc')
     habilidades = data.get('habilidades', [])
     foto_perfil_PATH = data.get('foto_perfil_PATH')
     senha = data.get('senha')
 
     # =========== Validation ==============
-    if not nome_completo or not email or not senha or not cidade or not bairro or not telefone or not data_nascimento:
+    if not nome_completo or not email or not senha or not cidade or not bairro or not telefone or not data_nasc_str:
         return jsonify({'error': 'Campos obrigatórios ausentes.'}), 400
+
+    try:
+        data_nasc = datetime.strptime(data_nasc_str, "%d-%m-%Y").date()
+    except ValueError:
+        return jsonify({'error': 'Formato de data inválido. Use DD-MM-YYYY.'}), 400
 
     senha_hash = generate_password_hash(senha)
 
@@ -39,9 +45,9 @@ def create_user():
         cidade=cidade,
         bairro=bairro,
         telefone=telefone,
-        data_nascimento=data_nascimento,
+        data_nasc=data_nasc, 
         habilidades=habilidades,
-        foto_perfil_PATH=foto_perfil_PATH
+        foto_perfil=foto_perfil_PATH
     )
 
     if not user:
@@ -108,7 +114,7 @@ def update_user(user_id):
     # ============== Allowed Fields ==============
     allowed_fields = {
         'nome_completo', 'email', 'senha', 'cidade', 'bairro',
-        'telefone', 'habilidades', 'data_nascimento', 'foto_perfil_PATH', 'conta_ativa'
+        'telefone', 'habilidades', 'data_nasc', 'foto_perfil_PATH', 'conta_ativa'
     }
 
     data = {k: v for k, v in data.items() if k in allowed_fields}

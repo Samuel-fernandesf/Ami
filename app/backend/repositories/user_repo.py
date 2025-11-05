@@ -2,6 +2,8 @@ from extensions import db
 from typing import Optional, List
 from datetime import date
 from models.usuario import Usuario
+from datetime import datetime
+import json
 
 class UserRepo:
 
@@ -23,7 +25,7 @@ class UserRepo:
         # Verifica duplicatas
         if UserRepo.get_user_by_email(email) or UserRepo.get_user_by_cpf(cpf):
             return None
-
+        
         user = Usuario(
             nome_completo=nome_completo,
             cpf=cpf,
