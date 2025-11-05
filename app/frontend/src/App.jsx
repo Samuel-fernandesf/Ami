@@ -1,14 +1,15 @@
-import RegisterForm from "./components/auth/RegisterForm"
-import LoginForm from "./components/auth/LoginForm"
+import { BrowserRouter as Router } from "react-router-dom";
+import RouterConfig from "./router/RouterConfig";
+import { ModalProvider } from "./components/modal/Modal";
 
 function App() {
-
   return (
-    <>
-      <RegisterForm />
-      <LoginForm />
-    </>
-  )
+    <Router>
+      <ModalProvider>
+        <RouterConfig />
+      </ModalProvider>
+    </Router>
+  );
 }
 
-export default App
+export default App;

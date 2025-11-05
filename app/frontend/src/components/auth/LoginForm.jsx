@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import "./AuthForm.css";
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
