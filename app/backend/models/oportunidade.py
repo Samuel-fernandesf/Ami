@@ -3,8 +3,8 @@ from extensions import db
 class Oportunidade(db.Model):
     __tablename__ = 'oportunidade'
     
-    id_oportunidade = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    organizaçao_id = db.Column(db.Integer, db.ForeignKey('organizacao.id_organizacao'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_organizacao = db.Column(db.Integer, db.ForeignKey('organizacao.id'), nullable=False)
     titulo = db.Column(db.String(255), nullable=False)
     descricao = db.Column(db.String(2048), nullable=False)
     local_endereco = db.Column(db.String(255), nullable=False)
@@ -16,13 +16,9 @@ class Oportunidade(db.Model):
     tags = db.Column(db.String(512), nullable=True)
     status = db.Column(db.Enum('aberto', 'fechado', name='status_enum'), default='aberto', nullable=False)
     criado_em = db.Column(db.DateTime, default=db.func.current_timestamp())
-    
 
-    def repr__(self):
-         return f'<Oportunidade {self.titulo} - {self.organizaçao_id}>'
-    
-    def __init__(self, organizaçao_id, titulo, descricao, local_endereco, comunidade, data_hora, duracao_horas, num_vagas, requisitos, tags):
-        self.organizaçao_id = organizaçao_id
+    def __init__(self, id_organizacao, titulo, descricao, local_endereco, comunidade, data_hora, duracao_horas, num_vagas, requisitos=None, tags=None):
+        self.id_organizacao = id_organizacao
         self.titulo = titulo
         self.descricao = descricao
         self.local_endereco = local_endereco
@@ -33,25 +29,27 @@ class Oportunidade(db.Model):
         self.requisitos = requisitos
         self.tags = tags
 
+    def __repr__(self):
+        return f'<Oportunidade {self.titulo} - Org {self.id_organizacao}>'
+    
     def to_dict(self):
         return {
-            'id_oportunidade': self.id_oportunidade,
-            'organizaçao_id': self.organizaçao_id,
+            'id': self.id,
+            'id_organizacao': self.id_organizacao,
             'titulo': self.titulo,
             'descricao': self.descricao,
             'local_endereco': self.local_endereco,
             'comunidade': self.comunidade,
-            'data_hora': self.data_hora.isoformat(),
+            'data_hora': self.data_hora.isoformat() if self.data_hora else None,
             'duracao_horas': self.duracao_horas,
             'num_vagas': self.num_vagas,
             'requisitos': self.requisitos,
             'tags': self.tags,
             'status': self.status,
-            'criado_em': self.criado_em.isoformat()
+            'criado_em': self.criado_em.isoformat() if self.criado_em else None
         }
-    
 
     def update_from_dict(self, data):
-        for field in ['organizaçao_id', 'titulo', 'descricao', 'local_endereco', 'comunidade', 'data_hora', 'duracao_horas', 'num_vagas', 'requisitos', 'tags', 'status']:
+        for field in ['id_organizacao', 'titulo', 'descricao', 'local_endereco', 'comunidade', 'data_hora', 'duracao_horas', 'num_vagas', 'requisitos', 'tags', 'status']:
             if field in data:
                 setattr(self, field, data[field])

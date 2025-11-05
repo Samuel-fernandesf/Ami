@@ -12,7 +12,6 @@ class Usuario(db.Model):
     cidade = db.Column(db.String(100), nullable=False)
     bairro = db.Column(db.String(255), nullable=False)
     telefone = db.Column(db.String(11), nullable=False)
-    habilidades = db.Column(db.JSON, nullable=True)
     data_nasc = db.Column(db.Date, nullable=False)
     foto_perfil = db.Column(db.String(255), nullable=True)
     tipo_usuario = db.Column(db.String(50), nullable=False, default="regular")
@@ -32,7 +31,6 @@ class Usuario(db.Model):
         bairro,
         telefone,
         data_nasc,
-        habilidades=None,
         foto_perfil=None,
         tipo_usuario="regular",
         conta_ativa=True
@@ -44,7 +42,6 @@ class Usuario(db.Model):
         self.cidade = cidade
         self.bairro = bairro
         self.telefone = telefone
-        self.habilidades = habilidades
         self.data_nasc = data_nasc
         self.foto_perfil = foto_perfil
         self.tipo_usuario = tipo_usuario
@@ -59,7 +56,6 @@ class Usuario(db.Model):
             'cidade': self.cidade,
             'bairro': self.bairro,
             'telefone': self.telefone,
-            'habilidades': self.habilidades,
             'data_nasc': self.data_nasc.isoformat(),
             'foto_perfil': self.foto_perfil,
             'tipo_usuario': self.tipo_usuario,
@@ -69,8 +65,7 @@ class Usuario(db.Model):
 
     def update_from_dict(self, data):
         for field in [
-            'nome_completo', 'cpf', 'email', 'senha', 'cidade', 'bairro', 'telefone',
-            'habilidades', 'data_nasc', 'foto_perfil', 'tipo_usuario', 'conta_ativa'
+            'nome_completo', 'cpf', 'email', 'senha', 'cidade', 'bairro', 'telefone','data_nasc', 'foto_perfil', 'tipo_usuario', 'conta_ativa'
         ]:
             if field in data:
                 setattr(self, field, data[field])

@@ -3,12 +3,12 @@ from extensions import db
 class Organizacao(db.Model):
     __tablename__ = 'organizacao'
 
-    id_organizacao = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_responsavel = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     razao_social = db.Column(db.String(1024), nullable=False)
     email_institucional = db.Column(db.String(120), unique=True, nullable=False)
     senha = db.Column(db.String(255), nullable=False)
-    cnpj_id = db.Column(db.String(14), unique=True, nullable=False)
+    cnpj = db.Column(db.String(14), unique=True, nullable=False)
     descricao = db.Column(db.String(2048), nullable=True)
     endereco_matriz = db.Column(db.String(255), nullable=False)
     contato = db.Column(db.String(11), nullable=False)
@@ -16,39 +16,37 @@ class Organizacao(db.Model):
     criado_em = db.Column(db.DateTime, default=db.func.current_timestamp())
     aprovada = db.Column(db.Boolean, default=False)
 
-
-    def __init__(self, id_responsavel, razao_social, email_institucional, senha, cnpj_id, descricao, endereco_matriz, contato, documento):
+    def __init__(self, id_responsavel, razao_social, email_institucional, senha, cnpj, descricao, endereco_matriz, contato, documento=None, aprovada=False):
         self.id_responsavel = id_responsavel
         self.razao_social = razao_social
         self.email_institucional = email_institucional
         self.senha = senha
-        self.cnpj_id = cnpj_id
+        self.cnpj = cnpj
         self.descricao = descricao
         self.endereco_matriz = endereco_matriz
         self.contato = contato
         self.documento = documento
-
-
+        self.aprovada = aprovada
 
     def __repr__(self):
-         return f'<Organizacao {self.razao_social} - {self.email_institucional}>'
+        return f'<Organizacao {self.razao_social} - {self.email_institucional}>'
     
     def to_dict(self):
         return {
-            'id_organizacao': self.id_organizacao,
+            'id': self.id,
             'id_responsavel': self.id_responsavel,
             'razao_social': self.razao_social,
             'email_institucional': self.email_institucional,
-            'cnpj_id': self.cnpj_id,
+            'cnpj': self.cnpj,
             'descricao': self.descricao,
             'endereco_matriz': self.endereco_matriz,
             'contato': self.contato,
             'documento': self.documento,
-            'criado_em': self.criado_em.isoformat(),
+            'criado_em': self.criado_em.isoformat() if self.criado_em else None,
             'aprovada': self.aprovada
         }
     
     def update_from_dict(self, data):
-        for field in ['id_responsavel', 'razao_social', 'email_institucional', 'senha', 'cnpj_id', 'descricao', 'endereco_matriz', 'contato', 'documento', 'aprovada']:
+        for field in ['id_responsavel', 'razao_social', 'email_institucional', 'senha', 'cnpj', 'descricao', 'endereco_matriz', 'contato', 'documento', 'aprovada']:
             if field in data:
                 setattr(self, field, data[field])
