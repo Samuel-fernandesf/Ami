@@ -1,6 +1,6 @@
 from extensions import db
 from typing import Optional, List
-from models.inscricao import Inscricao
+from models import Inscricao
 
 class InscricaoRepo:
     @staticmethod

@@ -1,7 +1,7 @@
 from extensions import db
 from typing import Optional, List
 from datetime import datetime
-from models.oportunidade import Oportunidade
+from models import Oportunidade
 
 class OportunidadeRepo:
     @staticmethod

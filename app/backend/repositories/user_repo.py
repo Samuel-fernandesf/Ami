@@ -1,7 +1,7 @@
 from extensions import db
 from typing import Optional, List
 from datetime import date
-from models.usuario import Usuario
+from models import Usuario
 from datetime import datetime
 import json
 

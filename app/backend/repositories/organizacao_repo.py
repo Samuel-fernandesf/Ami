@@ -1,7 +1,7 @@
 from extensions import db
 from typing import Optional, List
 from datetime import datetime
-from models.organizaçao import Organizacao
+from models import Organizacao
 
 class OrganizacaoRepo:
     @staticmethod
