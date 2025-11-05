@@ -31,6 +31,7 @@ class Habilidade(db.Model):
 class OportunidadeHabilidade(db.Model):
     __tablename__ = 'oportunidade_habilidade'
 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_oportunidade = db.Column(db.Integer, db.ForeignKey('oportunidade.id'), nullable=False)
     id_habilidade = db.Column(db.Integer, db.ForeignKey('habilidade.id'), nullable=False)
 
@@ -61,6 +62,7 @@ class OportunidadeHabilidade(db.Model):
 class VoluntarioHabilidade(db.Model):
     __tablename__ = 'voluntario_habilidade'
 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_habilidade = db.Column(db.Integer, db.ForeignKey('habilidade.id'), nullable=False)
 
