@@ -13,7 +13,7 @@ def generate_token(user: User):
 
     payload = {
         'id': user.id,
-        'is_admin': user.is_admin,
+        'is_admin': UserRepo.is_user_admin(user.id),
         # Poderia incluir 'exp' para expiração do token
     }
     token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
