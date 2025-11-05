@@ -1,29 +1,24 @@
 import React, { useState } from "react";
 import { useModal } from "../modal/Modal";
+import { useAuth } from "../../contexts/AuthContext";
 import "./AuthForm.css";
 
 /* ---------- máscaras e validação de CPF/telefone ---------- */
-
-// Aplica máscara de CPF: 000.000.000-00
-const maskCPF = (value) => {
-  return value
+const maskCPF = (value) =>
+  value
     .replace(/\D/g, "")
     .replace(/(\d{3})(\d)/, "$1.$2")
     .replace(/(\d{3})(\d)/, "$1.$2")
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
     .slice(0, 14);
-};
 
-// Máscara de telefone: (00) 00000-0000
-const maskPhone = (value) => {
-  return value
+const maskPhone = (value) =>
+  value
     .replace(/\D/g, "")
     .replace(/^(\d{2})(\d)/g, "($1) $2")
     .replace(/(\d{5})(\d)/, "$1-$2")
     .slice(0, 15);
-};
 
-// Validação dos dígitos do CPF
 const validateCPF = (cpf) => {
   cpf = cpf.replace(/[^\d]+/g, "");
   if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
@@ -43,7 +38,7 @@ const validateCPF = (cpf) => {
   return resto === parseInt(cpf.substring(10, 11), 10);
 };
 
-/* Helper para converter arquivo em base64 (para salvar no localStorage) */
+/* converte File para base64 (usado só para preview & enviar como string) */
 const fileToBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -52,8 +47,19 @@ const fileToBase64 = (file) =>
     reader.readAsDataURL(file);
   });
 
+/* helper para formatar data (YYYY-MM-DD -> DD-MM-YYYY) */
+const formatDateToDDMMYYYY = (isoDate) => {
+  if (!isoDate) return "";
+  const d = new Date(isoDate);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
 export default function RegisterForm({ firstInputRef }) {
   const { close } = useModal();
+  const { register } = useAuth();
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -67,7 +73,8 @@ export default function RegisterForm({ firstInputRef }) {
     cpf: "",
     data_nasc: "",
     telefone: "",
-    foto_perfil: null, // será base64 string
+    foto_perfil_file: null,
+    foto_perfil_base64: null,
     cidade: "",
     bairro: "",
     habilidades: [],
@@ -93,9 +100,10 @@ export default function RegisterForm({ firstInputRef }) {
     if (type === "file") {
       const file = files && files[0];
       if (file) {
+        setFormData((p) => ({ ...p, foto_perfil_file: file }));
         try {
           const base64 = await fileToBase64(file);
-          setFormData((prev) => ({ ...prev, [name]: base64 }));
+          setFormData((p) => ({ ...p, foto_perfil_base64: base64 }));
         } catch (err) {
           console.error("Erro ao converter imagem:", err);
         }
@@ -120,7 +128,7 @@ export default function RegisterForm({ firstInputRef }) {
     }));
   };
 
-  /* validações simples */
+  /* validação local por etapas */
   const validateStep1 = () => {
     const errs = {};
     if (!formData.email || !/^\S+@\S+\.\S+$/.test(formData.email))
@@ -140,25 +148,23 @@ export default function RegisterForm({ firstInputRef }) {
     if (!formData.nome_completo) errs.nome_completo = "Nome obrigatório";
     if (!formData.data_nasc) errs.data_nasc = "Data de nascimento obrigatória";
     if (!formData.telefone) errs.telefone = "Telefone obrigatório";
-    if (!formData.foto_perfil) errs.foto_perfil = "Adicione uma foto de perfil";
+    if (!formData.foto_perfil_base64) errs.foto_perfil = "Adicione uma foto de perfil";
     setErrors(errs);
     if (Object.keys(errs).length > 0) return false;
 
-    // tentativa de validar CPF via API (se falhar, permitimos continuar)
+    // tentativa opcional de validar CPF via API externa; falha não bloqueante
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://receitaws.com.br/v1/cpf/${cpfDigits}`
-      );
+      const cpfDigits = formData.cpf.replace(/\D/g, "");
+      const response = await fetch(`https://receitaws.com.br/v1/cpf/${cpfDigits}`);
       const data = await response.json();
-      if (data.status === "ERROR") {
-        console.warn("Validação ReceitaWS: CPF não encontrado ou inválido.");
-        // Nota: não bloqueamos cadastro apenas por falha externa
+      if (data.status && data.status === "ERROR") {
+        console.warn("ReceitaWS: CPF não encontrado/erro");
       } else {
-        console.log("CPF verificado:", data.nome);
+        console.log("ReceitaWS:", data.nome || "verificado");
       }
     } catch (err) {
-      console.warn("Não foi possível validar CPF externamente:", err);
+      console.warn("ReceitaWS indisponível:", err);
     } finally {
       setLoading(false);
     }
@@ -179,11 +185,12 @@ export default function RegisterForm({ firstInputRef }) {
 
   const prevStep = () => setStep((s) => Math.max(1, s - 1));
 
-  const handleSubmit = (e) => {
+  /* envia para AuthContext.register (que por sua vez faz fetch /users) */
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // validação final mínima
-    if (!formData.foto_perfil) {
+    // validação final
+    if (!formData.foto_perfil_base64) {
       setErrors({ foto_perfil: "Foto de perfil obrigatória" });
       alert("Por favor, adicione uma foto de perfil antes de finalizar!");
       return;
@@ -196,17 +203,29 @@ export default function RegisterForm({ firstInputRef }) {
         : []),
     ];
 
-    const dataToSend = {
-      ...formData,
+    const payload = {
+      nome_completo: formData.nome_completo,
+      cpf: formData.cpf.replace(/\D/g, ""), // só dígitos
+      email: formData.email,
+      cidade: formData.cidade,
+      bairro: formData.bairro,
+      telefone: formData.telefone.replace(/\D/g, ""), // só dígitos
+      data_nasc: formatDateToDDMMYYYY(formData.data_nasc), // DD-MM-YYYY
       habilidades: habilidadesFinal,
+      foto_perfil_PATH: formData.foto_perfil_base64, // base64 string
+      senha: formData.senha,
     };
 
-    // Salva no localStorage (foto já é base64)
-    localStorage.setItem("userData", JSON.stringify(dataToSend));
+    setLoading(true);
+    const res = await register(payload);
+    setLoading(false);
 
-    console.log("Usuário cadastrado:", dataToSend);
-    alert("Cadastro realizado com sucesso!");
-    close(); // fechar modal após cadastro
+    if (res.ok) {
+      alert("Cadastro realizado com sucesso!");
+      close();
+    } else {
+      alert("Erro ao cadastrar: " + (res.error || "Erro desconhecido"));
+    }
   };
 
   const renderStep = () => {
@@ -222,7 +241,7 @@ export default function RegisterForm({ firstInputRef }) {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
               required
             />
             {errors.email && <small className="error">{errors.email}</small>}
@@ -232,7 +251,7 @@ export default function RegisterForm({ firstInputRef }) {
               type="password"
               name="senha"
               value={formData.senha}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, senha: e.target.value }))}
               required
             />
             {errors.senha && <small className="error">{errors.senha}</small>}
@@ -242,21 +261,16 @@ export default function RegisterForm({ firstInputRef }) {
               type="password"
               name="confirmSenha"
               value={formData.confirmSenha}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, confirmSenha: e.target.value }))}
               required
             />
-            {errors.confirmSenha && (
-              <small className="error">{errors.confirmSenha}</small>
-            )}
+            {errors.confirmSenha && <small className="error">{errors.confirmSenha}</small>}
 
             <div style={{ marginTop: 12 }}>
-              <button type="button" onClick={nextStep}>
-                Próximo
-              </button>
+              <button type="button" onClick={nextStep}>Próximo</button>
             </div>
           </>
         );
-
       case 2:
         return (
           <>
@@ -267,19 +281,17 @@ export default function RegisterForm({ firstInputRef }) {
               type="text"
               name="nome_completo"
               value={formData.nome_completo}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, nome_completo: e.target.value }))}
               required
             />
-            {errors.nome_completo && (
-              <small className="error">{errors.nome_completo}</small>
-            )}
+            {errors.nome_completo && <small className="error">{errors.nome_completo}</small>}
 
             <label>CPF:</label>
             <input
               type="text"
               name="cpf"
               value={formData.cpf}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, cpf: maskCPF(e.target.value) }))}
               maxLength="14"
               required
             />
@@ -290,19 +302,17 @@ export default function RegisterForm({ firstInputRef }) {
               type="date"
               name="data_nasc"
               value={formData.data_nasc}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, data_nasc: e.target.value }))}
               required
             />
-            {errors.data_nasc && (
-              <small className="error">{errors.data_nasc}</small>
-            )}
+            {errors.data_nasc && <small className="error">{errors.data_nasc}</small>}
 
             <label>Telefone:</label>
             <input
               type="tel"
               name="telefone"
               value={formData.telefone}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, telefone: maskPhone(e.target.value) }))}
               required
             />
             {errors.telefone && <small className="error">{errors.telefone}</small>}
@@ -315,23 +325,19 @@ export default function RegisterForm({ firstInputRef }) {
               onChange={handleChange}
               required
             />
-            {errors.foto_perfil && (
-              <small className="error">{errors.foto_perfil}</small>
+            {formData.foto_perfil_base64 && (
+              <small>Preview carregado (será enviado ao servidor).</small>
             )}
+            {errors.foto_perfil && <small className="error">{errors.foto_perfil}</small>}
 
             {loading && <p>🔄 Validando CPF...</p>}
 
             <div style={{ marginTop: 12 }}>
-              <button type="button" onClick={prevStep}>
-                Anterior
-              </button>
-              <button type="button" onClick={nextStep} style={{ marginLeft: 8 }}>
-                Próximo
-              </button>
+              <button type="button" onClick={prevStep}>Anterior</button>
+              <button type="button" onClick={nextStep} style={{ marginLeft: 8 }}>Próximo</button>
             </div>
           </>
         );
-
       case 3:
         return (
           <>
@@ -342,7 +348,7 @@ export default function RegisterForm({ firstInputRef }) {
               type="text"
               name="cidade"
               value={formData.cidade}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, cidade: e.target.value }))}
               required
             />
 
@@ -351,21 +357,16 @@ export default function RegisterForm({ firstInputRef }) {
               type="text"
               name="bairro"
               value={formData.bairro}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, bairro: e.target.value }))}
               required
             />
 
             <div style={{ marginTop: 12 }}>
-              <button type="button" onClick={prevStep}>
-                Anterior
-              </button>
-              <button type="button" onClick={nextStep} style={{ marginLeft: 8 }}>
-                Próximo
-              </button>
+              <button type="button" onClick={prevStep}>Anterior</button>
+              <button type="button" onClick={nextStep} style={{ marginLeft: 8 }}>Próximo</button>
             </div>
           </>
         );
-
       case 4:
         return (
           <>
@@ -391,20 +392,15 @@ export default function RegisterForm({ firstInputRef }) {
               name="outrasHabilidades"
               placeholder="Liste outras habilidades, separadas por vírgula"
               value={formData.outrasHabilidades}
-              onChange={handleChange}
+              onChange={(e) => setFormData((p) => ({ ...p, outrasHabilidades: e.target.value }))}
             />
 
             <div style={{ marginTop: 12 }}>
-              <button type="button" onClick={prevStep}>
-                Anterior
-              </button>
-              <button type="submit" style={{ marginLeft: 8 }}>
-                Finalizar Cadastro
-              </button>
+              <button type="button" onClick={prevStep}>Anterior</button>
+              <button type="submit" style={{ marginLeft: 8 }}>Finalizar Cadastro</button>
             </div>
           </>
         );
-
       default:
         return null;
     }
