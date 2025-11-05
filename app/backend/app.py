@@ -35,7 +35,7 @@ def create_app():
     app.register_blueprint(inscricao_bp, url_prefix='/inscricao')
     app.register_blueprint(oportunidade_bp, url_prefix='/oportunidade')
     app.register_blueprint(organizacao_bp, url_prefix='/organizacao')
-    app.register_blueprint(user_bp, url_prefix='/users')
+    app.register_blueprint(user_bp, url_prefix='/user')
 
     return app
 
