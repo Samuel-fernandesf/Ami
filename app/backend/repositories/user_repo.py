@@ -1,31 +1,30 @@
 from extensions import db
 from typing import Optional, List
-from datetime import datetime
-from models.usuario import Usuario as User
-
+from datetime import date
+from models.usuario import Usuario
 
 class UserRepo:
 
     @staticmethod
     def create_user(
-        nome_completo : str,
-        cpf : str,
-        email : str,
-        senha : str,
+        nome_completo: str,
+        cpf: str,
+        email: str,
+        senha: str,
         cidade: str,
         bairro: str,
         telefone: str,
-        data_nascimento: str,
-        criado_em : datetime = datetime.now(datetime.timezone.utc),
-        conta_ativa: bool = True,
-
+        data_nasc: date,
+        habilidades: Optional[str] = None,
+        foto_perfil: Optional[str] = None,
         tipo_usuario: str = "regular",
+        conta_ativa: bool = True
+    ) -> Optional[Usuario]:
+        # Verifica duplicatas
+        if UserRepo.get_user_by_email(email) or UserRepo.get_user_by_cpf(cpf):
+            return None
 
-        habilidades: Optional[List[str]] = None,
-        foto_perfil_PATH: Optional[str] = None    
-    ) -> Optional[User]:
-        
-        user = User(
+        user = Usuario(
             nome_completo=nome_completo,
             cpf=cpf,
             email=email,
@@ -33,64 +32,58 @@ class UserRepo:
             cidade=cidade,
             bairro=bairro,
             telefone=telefone,
-            data_nascimento=data_nascimento,
-            criado_em=criado_em,
-            conta_ativa=conta_ativa,
-            tipo_usuario=tipo_usuario,
+            data_nasc=data_nasc,
             habilidades=habilidades,
-            foto_perfil_PATH=foto_perfil_PATH
+            foto_perfil=foto_perfil,
+            tipo_usuario=tipo_usuario,
+            conta_ativa=conta_ativa
         )
-
-        #check if user email or cpf is already in use
-        if UserRepo.get_user_by_email(email) or UserRepo.get_user_by_cpf(cpf):
-            return None
 
         db.session.add(user)
         db.session.commit()
-        
         return user
-    
+
     @staticmethod
-    def get_user_by_id(user_id) -> Optional[User]:
-        return User.query.filter_by(id=user_id).first()
-    
+    def get_user_by_id(user_id: int) -> Optional[Usuario]:
+        return Usuario.query.filter_by(id=user_id).first()
+
     @staticmethod
-    def get_user_by_email(email) -> Optional[User]:
-        return User.query.filter_by(email=email).first()
-    
+    def get_user_by_email(email: str) -> Optional[Usuario]:
+        return Usuario.query.filter_by(email=email).first()
+
     @staticmethod
-    def get_user_by_telefone(telefone) -> Optional[User]:
-        return User.query.filter_by(telefone=telefone).first()
-    
+    def get_user_by_cpf(cpf: str) -> Optional[Usuario]:
+        return Usuario.query.filter_by(cpf=cpf).first()
+
     @staticmethod
-    def get_user_by_cpf(cpf) -> Optional[User]:
-        return User.query.filter_by(cpf=cpf).first()
-    
+    def get_user_by_telefone(telefone: str) -> Optional[Usuario]:
+        return Usuario.query.filter_by(telefone=telefone).first()
+
     @staticmethod
-    def get_all_users() -> List[User]:
-        return User.query.all()
-    
+    def get_all_users() -> List[Usuario]:
+        return Usuario.query.all()
+
     @staticmethod
-    def get_all_admins() -> List[User]:
-        return User.query.filter_by(tipo_usuario="admin").all()
-    
+    def get_all_admins() -> List[Usuario]:
+        return Usuario.query.filter_by(tipo_usuario="admin").all()
+
     @staticmethod
-    def is_user_admin(user_id):
-        return User.query.filter_by(id=user_id, tipo_usuario="admin").first() is not None
-    
+    def is_user_admin(user_id: int) -> bool:
+        return Usuario.query.filter_by(id=user_id, tipo_usuario="admin").first() is not None
+
     @staticmethod
-    def update_user(user_id, data) -> Optional[User]:
+    def update_user(user_id: int, data: dict) -> Optional[Usuario]:
         user = UserRepo.get_user_by_id(user_id)
         if not user:
             return None
 
         data.pop("id", None)
         user.update_from_dict(data)
-        
+        db.session.commit()
         return user
-    
+
     @staticmethod
-    def delete_user(user_id) -> bool:
+    def delete_user(user_id: int) -> bool:
         user = UserRepo.get_user_by_id(user_id)
         if not user:
             return False

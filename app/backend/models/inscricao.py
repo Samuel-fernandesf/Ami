@@ -11,9 +11,9 @@ class Inscricao(db.Model):
     data_aprovacao_recusa = db.Column(db.DateTime, nullable=True)
 
     def __init__(self, id_usuario, id_oportunidade, status_inscricao='pendente', data_aprovacao_recusa=None):
-        id_usuario = id_usuario,
-        id_oportunidade = id_oportunidade,
-        status_inscricao = status_inscricao,
+        self.id_usuario = id_usuario,
+        self.id_oportunidade = id_oportunidade,
+        self.status_inscricao = status_inscricao,
         data_aprovacao_recusa = data_aprovacao_recusa
 
     def repr__(self):
