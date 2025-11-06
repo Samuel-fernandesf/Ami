@@ -16,7 +16,7 @@ class UserRepo:
         bairro: str,
         telefone: str,
         data_nasc: date,
-        habilidades: Optional[str] = None,
+        #habilidades: Optional[str] = None,
         foto_perfil: Optional[str] = None,
         tipo_usuario: str = "regular",
         conta_ativa: bool = True
@@ -34,7 +34,7 @@ class UserRepo:
             bairro=bairro,
             telefone=telefone,
             data_nasc=data_nasc,
-            habilidades=habilidades,
+            #habilidades=habilidades,
             foto_perfil=foto_perfil,
             tipo_usuario=tipo_usuario,
             conta_ativa=conta_ativa
@@ -57,7 +57,10 @@ class UserRepo:
         return Usuario.query.filter_by(telefone=telefone).first()
 
     def get_all_users() -> List[Usuario]:
-        return Usuario.query.all()
+        try:
+            return Usuario.query.all()
+        except Exception as e:
+            return []
 
     def get_all_admins() -> List[Usuario]:
         return Usuario.query.filter_by(tipo_usuario="admin").all()

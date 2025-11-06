@@ -21,7 +21,7 @@ def create_user():
     bairro = data.get('bairro')
     telefone = data.get('telefone')
     data_nasc_str = data.get('data_nasc')
-    habilidades = data.get('habilidades', [])
+    # habilidades = data.get('habilidades', [])
     foto_perfil_PATH = data.get('foto_perfil_PATH')
     senha = data.get('senha')
 
@@ -50,7 +50,7 @@ def create_user():
         bairro=bairro,
         telefone=telefone,
         data_nasc=data_nasc, 
-        habilidades=habilidades,
+        # habilidades=habilidades,
         foto_perfil=foto_perfil_PATH
     )
 

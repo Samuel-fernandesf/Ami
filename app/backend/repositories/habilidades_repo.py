@@ -17,8 +17,8 @@ class HabilidadeRepo:
 
         return hab
     
-    def get_habilidade_by_id(habilidade_id:int) -> Habilidade:
-        return Habilidade.query.filter_by(id=habilidade_id).first()
+    def get_habilidade_by_id(id:int) -> Habilidade:
+        return Habilidade.query.filter_by(id=id).first()
     
     def get_habilidade_by_name(name:str) -> Habilidade:
         return Habilidade.query.filter_by(nome=name).first()
@@ -30,8 +30,8 @@ class HabilidadeRepo:
         hab = HabilidadeRepo.get_habilidade_by_name(name=name)
         return hab is not None
     
-    def update_habilidade(habilidade_id:str, data:dict) -> Optional[Habilidade]:
-        hab = HabilidadeRepo.get_habilidade_by_id(habilidade_id=habilidade_id)
+    def update_habilidade(id:str, data:dict) -> Optional[Habilidade]:
+        hab = HabilidadeRepo.get_habilidade_by_id(id=id)
         if not hab:
             return None
 
@@ -40,8 +40,8 @@ class HabilidadeRepo:
         db.session.commit()
         return hab
     
-    def delete_habilidade(habilidade_id:str) -> Optional[Habilidade]:
-        hab = HabilidadeRepo.get_habilidade_by_id(habilidade_id=habilidade_id)
+    def delete_habilidade(id:str) -> Optional[Habilidade]:
+        hab = HabilidadeRepo.get_habilidade_by_id(id=id)
         if not hab:
             return False
 

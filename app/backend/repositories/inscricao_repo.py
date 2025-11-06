@@ -26,8 +26,8 @@ class InscricaoRepo:
         db.session.commit()
         return inscricao
 
-    def get_inscricao_by_id(id_inscricao: int) -> Optional[Inscricao]:   
-        return Inscricao.query.filter_by(id_inscricao=id_inscricao).first()
+    def get_inscricao_by_id(id: int) -> Optional[Inscricao]:   
+        return Inscricao.query.filter_by(id=id).first()
 
     def get_all_inscricoes() -> List[Inscricao]:
         return Inscricao.query.all()
@@ -44,8 +44,8 @@ class InscricaoRepo:
     def get_inscricoes_pendentes() -> List[Inscricao]:  
         return Inscricao.query.filter_by(status_inscricao='pendente').all()
 
-    def update_inscricao(id_inscricao: int, data: dict) -> Optional[Inscricao]:
-        inscricao = InscricaoRepo.get_inscricao_by_id(id_inscricao)
+    def update_inscricao(id: int, data: dict) -> Optional[Inscricao]:
+        inscricao = InscricaoRepo.get_inscricao_by_id(id)
         if not inscricao:
             return None
 
@@ -53,8 +53,8 @@ class InscricaoRepo:
         db.session.commit()
         return inscricao
 
-    def delete_inscricao(id_inscricao: int) -> bool:
-        inscricao = InscricaoRepo.get_inscricao_by_id(id_inscricao)
+    def delete_inscricao(id: int) -> bool:
+        inscricao = InscricaoRepo.get_inscricao_by_id(id)
         if not inscricao:
             return False
 

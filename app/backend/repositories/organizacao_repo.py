@@ -9,7 +9,7 @@ class OrganizacaoRepo:
         razao_social: str,
         email_institucional: str,
         senha: str,
-        cnpj_id: str,
+        cnpj: str,
         descricao: str,
         endereco_matriz: str,
         contato: str,
@@ -21,15 +21,15 @@ class OrganizacaoRepo:
             razao_social=razao_social,
             email_institucional=email_institucional,
             senha=senha,
-            cnpj_id=cnpj_id,
+            cnpj=cnpj,
             descricao=descricao,
             endereco_matriz=endereco_matriz,
             contato=contato,
             documento=documento
         )
 
-        #check if email or cnpj_id is already in use
-        if OrganizacaoRepo.get_organizacao_by_email(email_institucional) or OrganizacaoRepo.get_organizacao_by_cnpj(cnpj_id):
+        #check if email or cnpj is already in use
+        if OrganizacaoRepo.get_organizacao_by_email(email_institucional) or OrganizacaoRepo.get_organizacao_by_cnpj(cnpj):
             return None
 
         db.session.add(organizacao)
@@ -37,20 +37,20 @@ class OrganizacaoRepo:
         
         return organizacao
     
-    def get_organizacao_by_id(id_organizacao) -> Optional[Organizacao]:
-        return Organizacao.query.filter_by(id_organizacao=id_organizacao).first()
+    def get_organizacao_by_id(id) -> Optional[Organizacao]:
+        return Organizacao.query.filter_by(id=id).first()
     
     def get_organizacao_by_email(email_institucional) -> Optional[Organizacao]:
         return Organizacao.query.filter_by(email_institucional=email_institucional).first()
     
-    def get_organizacao_by_cnpj(cnpj_id) -> Optional[Organizacao]:
-        return Organizacao.query.filter_by(cnpj_id=cnpj_id).first()
+    def get_organizacao_by_cnpj(cnpj) -> Optional[Organizacao]:
+        return Organizacao.query.filter_by(cnpj=cnpj).first()
 
     def get_all_organizacoes() -> List[Organizacao]:
         return Organizacao.query.all()
     
-    def update_organizacao(id_organizacao: Organizacao, data: dict) -> Organizacao:
-        organizacao = OrganizacaoRepo.get_organizacao_by_id(id_organizacao)
+    def update_organizacao(id: Organizacao, data: dict) -> Organizacao:
+        organizacao = OrganizacaoRepo.get_organizacao_by_id(id)
         if not organizacao:
             return None
         
@@ -59,8 +59,8 @@ class OrganizacaoRepo:
         
         return organizacao
     
-    def delete_organizacao(id_organizacao) -> bool:
-        organizacao = OrganizacaoRepo.get_organizacao_by_id(id_organizacao)
+    def delete_organizacao(id) -> bool:
+        organizacao = OrganizacaoRepo.get_organizacao_by_id(id)
         if not organizacao:
             return False
         

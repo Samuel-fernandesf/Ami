@@ -34,8 +34,8 @@ class OportunidadeRepo:
         db.session.commit()
         return oportunidade
 
-    def get_oportunidade_by_id(id_oportunidade: int) -> Optional[Oportunidade]:
-        return Oportunidade.query.filter_by(id_oportunidade=id_oportunidade).first()
+    def get_oportunidade_by_id(id: int) -> Optional[Oportunidade]:
+        return Oportunidade.query.filter_by(id=id).first()
 
     def get_all_oportunidades() -> List[Oportunidade]:
         return Oportunidade.query.all()
@@ -46,8 +46,8 @@ class OportunidadeRepo:
     def get_oportunidades_abertas() -> List[Oportunidade]:
         return Oportunidade.query.filter_by(status='aberto').all()
 
-    def update_oportunidade(id_oportunidade: int, data: dict) -> Optional[Oportunidade]:
-        oportunidade = OportunidadeRepo.get_oportunidade_by_id(id_oportunidade)
+    def update_oportunidade(id: int, data: dict) -> Optional[Oportunidade]:
+        oportunidade = OportunidadeRepo.get_oportunidade_by_id(id)
         if not oportunidade:
             return None
 
@@ -55,8 +55,8 @@ class OportunidadeRepo:
         db.session.commit()
         return oportunidade
 
-    def delete_oportunidade(id_oportunidade: int) -> bool:
-        oportunidade = OportunidadeRepo.get_oportunidade_by_id(id_oportunidade)
+    def delete_oportunidade(id: int) -> bool:
+        oportunidade = OportunidadeRepo.get_oportunidade_by_id(id)
         if not oportunidade:
             return False
 
