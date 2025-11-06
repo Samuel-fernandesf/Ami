@@ -3,7 +3,6 @@ from typing import Optional, List
 from models import Inscricao
 
 class InscricaoRepo:
-    @staticmethod
     def create_inscricao(
         id_usuario: int,
         id_oportunidade: int,
@@ -27,31 +26,24 @@ class InscricaoRepo:
         db.session.commit()
         return inscricao
 
-    @staticmethod
     def get_inscricao_by_id(id_inscricao: int) -> Optional[Inscricao]:   
         return Inscricao.query.filter_by(id_inscricao=id_inscricao).first()
 
-    @staticmethod
     def get_all_inscricoes() -> List[Inscricao]:
         return Inscricao.query.all()
 
-    @staticmethod
     def get_inscricoes_by_usuario(id_usuario: int) -> List[Inscricao]:
         return Inscricao.query.filter_by(id_usuario=id_usuario).all()
 
-    @staticmethod
     def get_inscricoes_by_oportunidade(id_oportunidade: int) -> List[Inscricao]: 
         return Inscricao.query.filter_by(id_oportunidade=id_oportunidade).all()
 
-    @staticmethod
     def get_inscricao_by_usuario_oportunidade(id_usuario: int, id_oportunidade: int) -> Optional[Inscricao]:   
         return Inscricao.query.filter_by(id_usuario=id_usuario, id_oportunidade=id_oportunidade).first()
 
-    @staticmethod
     def get_inscricoes_pendentes() -> List[Inscricao]:  
         return Inscricao.query.filter_by(status_inscricao='pendente').all()
 
-    @staticmethod
     def update_inscricao(id_inscricao: int, data: dict) -> Optional[Inscricao]:
         inscricao = InscricaoRepo.get_inscricao_by_id(id_inscricao)
         if not inscricao:
@@ -61,7 +53,6 @@ class InscricaoRepo:
         db.session.commit()
         return inscricao
 
-    @staticmethod
     def delete_inscricao(id_inscricao: int) -> bool:
         inscricao = InscricaoRepo.get_inscricao_by_id(id_inscricao)
         if not inscricao:

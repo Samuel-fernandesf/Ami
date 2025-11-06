@@ -7,7 +7,6 @@ import json
 
 class UserRepo:
 
-    @staticmethod
     def create_user(
         nome_completo: str,
         cpf: str,
@@ -45,35 +44,27 @@ class UserRepo:
         db.session.commit()
         return user
 
-    @staticmethod
     def get_user_by_id(user_id: int) -> Optional[Usuario]:
         return Usuario.query.filter_by(id=user_id).first()
 
-    @staticmethod
     def get_user_by_email(email: str) -> Optional[Usuario]:
         return Usuario.query.filter_by(email=email).first()
 
-    @staticmethod
     def get_user_by_cpf(cpf: str) -> Optional[Usuario]:
         return Usuario.query.filter_by(cpf=cpf).first()
 
-    @staticmethod
     def get_user_by_telefone(telefone: str) -> Optional[Usuario]:
         return Usuario.query.filter_by(telefone=telefone).first()
 
-    @staticmethod
     def get_all_users() -> List[Usuario]:
         return Usuario.query.all()
 
-    @staticmethod
     def get_all_admins() -> List[Usuario]:
         return Usuario.query.filter_by(tipo_usuario="admin").all()
 
-    @staticmethod
     def is_user_admin(user_id: int) -> bool:
         return Usuario.query.filter_by(id=user_id, tipo_usuario="admin").first() is not None
 
-    @staticmethod
     def update_user(user_id: int, data: dict) -> Optional[Usuario]:
         user = UserRepo.get_user_by_id(user_id)
         if not user:
@@ -84,7 +75,6 @@ class UserRepo:
         db.session.commit()
         return user
 
-    @staticmethod
     def delete_user(user_id: int) -> bool:
         user = UserRepo.get_user_by_id(user_id)
         if not user:

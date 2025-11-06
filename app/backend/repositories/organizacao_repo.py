@@ -4,7 +4,6 @@ from datetime import datetime
 from models import Organizacao
 
 class OrganizacaoRepo:
-    @staticmethod
     def create_organizacao(
         id_responsavel: int,
         razao_social: str,
@@ -38,23 +37,18 @@ class OrganizacaoRepo:
         
         return organizacao
     
-    @staticmethod
     def get_organizacao_by_id(id_organizacao) -> Optional[Organizacao]:
         return Organizacao.query.filter_by(id_organizacao=id_organizacao).first()
     
-    @staticmethod
     def get_organizacao_by_email(email_institucional) -> Optional[Organizacao]:
         return Organizacao.query.filter_by(email_institucional=email_institucional).first()
     
-    @staticmethod
     def get_organizacao_by_cnpj(cnpj_id) -> Optional[Organizacao]:
         return Organizacao.query.filter_by(cnpj_id=cnpj_id).first()
 
-    @staticmethod
     def get_all_organizacoes() -> List[Organizacao]:
         return Organizacao.query.all()
     
-    @staticmethod
     def update_organizacao(id_organizacao: Organizacao, data: dict) -> Organizacao:
         organizacao = OrganizacaoRepo.get_organizacao_by_id(id_organizacao)
         if not organizacao:
@@ -65,7 +59,6 @@ class OrganizacaoRepo:
         
         return organizacao
     
-    @staticmethod
     def delete_organizacao(id_organizacao) -> bool:
         organizacao = OrganizacaoRepo.get_organizacao_by_id(id_organizacao)
         if not organizacao:

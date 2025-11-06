@@ -4,7 +4,6 @@ from datetime import datetime
 from models import Oportunidade
 
 class OportunidadeRepo:
-    @staticmethod
     def create_oportunidade(
         id_organizacao: int,
         titulo: str,
@@ -35,23 +34,18 @@ class OportunidadeRepo:
         db.session.commit()
         return oportunidade
 
-    @staticmethod
     def get_oportunidade_by_id(id_oportunidade: int) -> Optional[Oportunidade]:
         return Oportunidade.query.filter_by(id_oportunidade=id_oportunidade).first()
 
-    @staticmethod
     def get_all_oportunidades() -> List[Oportunidade]:
         return Oportunidade.query.all()
 
-    @staticmethod
     def get_oportunidades_by_organizacao(id_organizacao: int) -> List[Oportunidade]:
         return Oportunidade.query.filter_by(organizaçao_id=id_organizacao).all()
 
-    @staticmethod
     def get_oportunidades_abertas() -> List[Oportunidade]:
         return Oportunidade.query.filter_by(status='aberto').all()
 
-    @staticmethod
     def update_oportunidade(id_oportunidade: int, data: dict) -> Optional[Oportunidade]:
         oportunidade = OportunidadeRepo.get_oportunidade_by_id(id_oportunidade)
         if not oportunidade:
@@ -61,7 +55,6 @@ class OportunidadeRepo:
         db.session.commit()
         return oportunidade
 
-    @staticmethod
     def delete_oportunidade(id_oportunidade: int) -> bool:
         oportunidade = OportunidadeRepo.get_oportunidade_by_id(id_oportunidade)
         if not oportunidade:
