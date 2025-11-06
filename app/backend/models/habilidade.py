@@ -7,19 +7,19 @@ class Habilidade(db.Model):
     nome = db.Column(db.String(100), nullable=False, unique=True)
 
     # Relacionamentos (muitos-para-muitos)
-    voluntarios = db.relationship('VoluntarioHabilidade', backref='habilidade', lazy='dynamic')
-    oportunidades = db.relationship('OportunidadeHabilidade', backref='habilidade', lazy='dynamic')
+    voluntarios = db.relationship('VoluntarioHabilidade', backref='voluntarios_habilidade', lazy='dynamic')
+    oportunidades = db.relationship('OportunidadeHabilidade', backref='oportunidade_habilidade', lazy='dynamic')
 
     def __init__(self, nome):
         self.nome = nome
 
     def __repr__(self):
-        return f'<Habilidade {self.nome}>'
+        return f''
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'nome': self.nome
+        'id': self.id,
+        'nome': self.nome
         }
 
     def update_from_dict(self, data):
@@ -36,8 +36,8 @@ class OportunidadeHabilidade(db.Model):
     id_habilidade = db.Column(db.Integer, db.ForeignKey('habilidade.id'), nullable=False)
 
     # Relacionamentos
-    oportunidade = db.relationship('Oportunidade', backref='habilidades', lazy='joined')
-    habilidade = db.relationship('Habilidade', backref='oportunidades', lazy='joined')
+    oportunidade = db.relationship('Oportunidade', backref='habilidade', lazy='joined')
+    habilidade = db.relationship('Habilidade', backref='oportunidade', lazy='joined')
 
     def __init__(self, id_oportunidade, id_habilidade):
         self.id_oportunidade = id_oportunidade
@@ -67,8 +67,8 @@ class VoluntarioHabilidade(db.Model):
     id_habilidade = db.Column(db.Integer, db.ForeignKey('habilidade.id'), nullable=False)
 
     # Relacionamentos
-    usuario = db.relationship('Usuario', backref='habilidades', lazy='joined')
-    habilidade = db.relationship('Habilidade', backref='voluntarios', lazy='joined')
+    usuario = db.relationship('Usuario', backref='habilidade', lazy='joined')
+    habilidade = db.relationship('Habilidade', backref='voluntario', lazy='joined')
 
     def __init__(self, id_usuario, id_habilidade):
         self.id_usuario = id_usuario
