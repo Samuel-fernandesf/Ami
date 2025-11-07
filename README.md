@@ -16,6 +16,19 @@ O projeto foi desenvolvido como parte da disciplina de **Inovação e Tecnologia
 
 ---
 
+## Índice 
+- [Objetivo do Projeto](#objetivo-do-projeto)
+- [Funcionalidades Principais](#funcionalidades-principais)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Instalação]()
+- [Rodando o Projeto]()
+- [Equipe](#equipe)
+- [Metodologia](#metodologia)
+- [Trabalhos Relacionados](#trabalhos-relacionados)
+- [Licensa](#licença)
+
+
+
 ## Objetivo do Projeto
 
 Facilitar a conexão entre **ONGs e/ou instituições locais e jovens voluntários**, criando um espaço digital para divulgar ações sociais curtas (1–3 horas) e incentivar o protagonismo juvenil.
@@ -46,7 +59,7 @@ Facilitar a conexão entre **ONGs e/ou instituições locais e jovens voluntári
 | Camada | Ferramenta |
 |--------|-------------|
 | **Backend** | Python (Flask) |
-| **Frontend** | JavaScript (Vite) |
+| **Frontend** | React + Vite |
 | **Banco de Dados** | MySQL + SQLAlchemy |
 | **Prototipação** | [Figma](https://www.figma.com/make/6G077fFrGAR3Ava8mbK2dj/Ami---Conectando-jovens--moldando-o-futuro?node-id=0-1&p=f&t=Lw8g1gABCKEl7a5J-0) |
 | **Controle de Versão** | Git / GitHub |
@@ -54,6 +67,91 @@ Facilitar a conexão entre **ONGs e/ou instituições locais e jovens voluntári
 
 
 ---
+
+## Instalação
+
+### **Pré-requisitos**
+
+- Python 3.12+
+- MySQL 8.0+
+- Node.js 18+
+- Git
+
+
+### Passo a Passo
+
+1. **Clone o repositório:**
+```bash
+  git clone https://github.com/Samuel-fernandesf/Ami.git
+  cd AMI
+```   
+
+2. **Instale as dependências do backend:**
+```bash
+  cd app/backend
+  python3 -m venv venv
+  
+  # Linux/MacOS
+  source venv/bin/activate
+
+  # Windows
+  ./venv/scripts/Activate.ps1
+
+  pip install -r requirements.txt  
+```  
+
+3. **Configure o Ambiente Virtual**
+
+Renomeie o arquivo `.env.example` para `.env` e configure as variáveis de ambiente:
+```python
+  SECRET_KEY="sua_chave_secreta_aqui"
+  DATABASE_URL="mysql://{usuário}:{senha}@localhost:3306/ami"
+```
+
+3. **Configure o Banco de Dados**
+
+Primeiro crie **com o MySQL** uma base de dados de nome `ami`:
+```sql
+  CREATE DATABASE ami;
+```
+
+Após isso, na pasta do backend execute
+```bash
+  flask db upgrade
+```
+
+### Instalando o FrontEnd
+
+1. **Instale as dependências do frontend:**
+```bash
+  cd ../frontend
+  npm install
+```
+
+## Rodando o Projeto
+
+### **Rodando o Backend**
+
+Na pasta `app/backend`, com o ambiente virtual ativado, execute:
+```bash
+  flask run
+```
+O backend estará disponível em [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+
+### **Rodando o Frontend**
+Na pasta `app/frontend`, execute:
+```bash
+  npm run dev
+```
+O frontend estará disponível em [http://127.0.0.1:5173](http://127.0.0.1:5173)
+
+
+
+
+
+
+
 ##  Equipe
 
 - **Bernardo Duarte Marcelino** - Estudante de TI (Instituto Federal)
