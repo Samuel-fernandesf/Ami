@@ -4,11 +4,11 @@ class Habilidade(db.Model):
     __tablename__ = 'habilidade'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nome = db.Column(db.String(100), nullable=False, unique=True)
+    nome = db.Column(db.String(100), unique=True, nullable=False)
 
-    # Relacionamentos (muitos-para-muitos)
-    #voluntarios = db.relationship('VoluntarioHabilidade', backref='voluntarios_habilidade', lazy='dynamic')
-    #oportunidades = db.relationship('OportunidadeHabilidade', backref='oportunidade_habilidade', lazy='dynamic')
+    #RELACIONAMENTOS
+    oportunidades = db.relationship('OportunidadeHabilidade', back_populates='habilidades', lazy='dynamic', cascade='all, delete-orphan')
+    voluntarios = db.relationship('VoluntarioHabilidade', back_populates='habilidades', lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, nome):
         self.nome = nome
@@ -27,38 +27,6 @@ class Habilidade(db.Model):
             if field in data:
                 setattr(self, field, data[field])
 
-
-class OportunidadeHabilidade(db.Model):
-    __tablename__ = 'oportunidade_habilidade'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_oportunidade = db.Column(db.Integer, db.ForeignKey('oportunidade.id'), nullable=False)
-    id_habilidade = db.Column(db.Integer, db.ForeignKey('habilidade.id'), nullable=False)
-
-    # Relacionamentos
-    #oportunidade = db.relationship('Oportunidade', backref='habilidade', lazy='joined')
-    #habilidade = db.relationship('Habilidade', backref='oportunidade', lazy='joined')
-
-    def __init__(self, id_oportunidade, id_habilidade):
-        self.id_oportunidade = id_oportunidade
-        self.id_habilidade = id_habilidade
-
-    def __repr__(self):
-        return f'<OportunidadeHabilidade oportunidade_id={self.id_oportunidade}, habilidade_id={self.id_habilidade}>'
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'id_oportunidade': self.id_oportunidade,
-            'id_habilidade': self.id_habilidade
-        }
-
-    def update_from_dict(self, data):
-        for field in ['id_oportunidade', 'id_habilidade']:
-            if field in data:
-                setattr(self, field, data[field])
-
-
 class VoluntarioHabilidade(db.Model):
     __tablename__ = 'voluntario_habilidade'
 
@@ -66,9 +34,13 @@ class VoluntarioHabilidade(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_habilidade = db.Column(db.Integer, db.ForeignKey('habilidade.id'), nullable=False)
 
-    # Relacionamentos
-    #usuario = db.relationship('Usuario', backref='habilidade', lazy='joined')
-    #habilidade = db.relationship('Habilidade', backref='voluntario', lazy='joined')
+    __table_args__ = (
+        db.UniqueConstraint('id_usuario', 'id_habilidade', name='uq_usuario_habilidade'),
+    )
+    
+    #RELACIONAMENTOS
+    voluntario = db.relationship('Usuario', back_populates='habilidades', lazy='select')
+    habilidade = db.relationship('Habilidade', back_populates='voluntarios', lazy='select')
 
     def __init__(self, id_usuario, id_habilidade):
         self.id_usuario = id_usuario
@@ -86,5 +58,39 @@ class VoluntarioHabilidade(db.Model):
 
     def update_from_dict(self, data):
         for field in ['id_usuario', 'id_habilidade']:
+            if field in data:
+                setattr(self, field, data[field])
+
+class OportunidadeHabilidade(db.Model):
+    __tablename__ = 'oportunidade_habilidade'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_oportunidade = db.Column(db.Integer, db.ForeignKey('oportunidade.id'), nullable=False)
+    id_habilidade = db.Column(db.Integer, db.ForeignKey('habilidade.id'), nullable=False)
+
+    __table_args__ = (
+        db.UniqueConstraint('id_oportunidade', 'id_habilidade', name='uq_oportunidade_habilidade'),
+    )
+    
+    #RELACIONAMENTOS
+    oportunidade = db.relationship('Oportunidade', back_populates='habilidades', lazy='select')
+    habilidade = db.relationship('Habilidade', back_populates='oportunidades', lazy='select')
+
+    def __init__(self, id_oportunidade, id_habilidade):
+        self.id_oportunidade = id_oportunidade
+        self.id_habilidade = id_habilidade
+
+    def __repr__(self):
+        return f'<OportunidadeHabilidade oportunidade_id={self.id_oportunidade}, habilidade_id={self.id_habilidade}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'id_oportunidade': self.id_oportunidade,
+            'id_habilidade': self.id_habilidade
+        }
+
+    def update_from_dict(self, data):
+        for field in ['id_oportunidade', 'id_habilidade']:
             if field in data:
                 setattr(self, field, data[field])
