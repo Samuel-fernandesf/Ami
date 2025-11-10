@@ -1,4 +1,5 @@
 from extensions import db
+from . import StatusOportunidades
 
 class Oportunidade(db.Model):
     __tablename__ = 'oportunidade'
@@ -13,9 +14,17 @@ class Oportunidade(db.Model):
     duracao_horas = db.Column(db.Integer, nullable=False)
     num_vagas = db.Column(db.Integer, nullable=False)
     requisitos = db.Column(db.String(1024), nullable=True)
+
+    #OPÇÃO CORRETA SERIA RETIRAR ESSE COLUNA E COLOCA-LA COMO TABELA SEPARADA
     tags = db.Column(db.String(512), nullable=True)
-    status = db.Column(db.Enum('aberto', 'fechado', name='status_enum'), default='aberto', nullable=False)
+    status = db.Column(db.Enum(StatusOportunidades), default=StatusOportunidades.aberta, nullable=False)
     criado_em = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    #RELACIONAMENTOS
+    organizacao = db.relationship('Organizacao', back_populates='organizacao', lazy='select')
+    requisitos = db.relationship('OportunidadeHabilidade', back_populates='oportunidade', lazy='dynamic', cascade='all, delete-orphan')
+    inscricoes = db.relationship('Inscricao', back_populates='oportunidade', lazy='dynamic', cascade='all, delete-orphan')
+
 
     def __init__(self, id_organizacao, titulo, descricao, local_endereco, comunidade, data_hora, duracao_horas, num_vagas, requisitos=None, tags=None):
         self.id_organizacao = id_organizacao
