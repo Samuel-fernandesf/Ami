@@ -18,6 +18,11 @@ class Usuario(db.Model):
     criado_em = db.Column(db.DateTime, default=db.func.current_timestamp())
     conta_ativa = db.Column(db.Boolean, default=True)
 
+    #RELACIONAMENTOS
+    organizacoes_responsaveis = db.relationship('Organizacao', back_populates='responsavel', lazy='dynamic', cascade='all, delete-orphan')
+    habilidades = db.relationship('VoluntarioHabilidade', back_populates='voluntario', lazy='dynamic', cascade='all, delete-orphan')
+    inscricoes = db.relationship('Inscricao', back_populates='voluntario', lazy='dynamic', cascade='all, delete-orphan')
+
     def __repr__(self):
         return f'<Usuario {self.nome_completo} - {self.email}>'
 
