@@ -38,9 +38,11 @@ class UserRepo:
             conta_ativa=conta_ativa
         )
 
-        UserRepo.update_habilidades(user.id, habilidades or [])
         db.session.add(user)
         db.session.commit()
+
+        UserRepo.update_habilidades(user.id, habilidades or [])
+
         return user
 
     def get_user_by_id(user_id: int) -> Optional[Usuario]:
@@ -73,8 +75,10 @@ class UserRepo:
             return 
         
         # safely updates user habilidades        
-        UserRepo.update_habilidades(user_id, data.get("habilidades", []))
+        habilidades = data.get("habilidades", None)
         data.pop("habilidades", None)
+        
+        UserRepo.update_habilidades(user_id, habilidades or [])
 
         data.pop("id", None)
         user.update_from_dict(data)
@@ -83,6 +87,7 @@ class UserRepo:
 
     def delete_user(user_id: int) -> bool:
         user : Usuario = UserRepo.get_user_by_id(user_id)
+        
         if not user:
             return False
 

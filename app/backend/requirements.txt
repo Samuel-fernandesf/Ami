@@ -7,3 +7,4 @@ PyJWT
 dotenv
 cryptography
 pymysql
+validate-docbr

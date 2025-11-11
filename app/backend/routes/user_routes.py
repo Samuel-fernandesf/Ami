@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from middleware.jwt_util import token_required
 from repositories import UserRepo
+from validate_docbr import CPF
 from datetime import datetime
 
 user_bp = Blueprint('user_bp', __name__)
@@ -35,6 +36,12 @@ def create_user():
     
     if len(telefone) > 11:
         return jsonify({'error': 'Telefone inválido. Máximo de 11 caracteres.'}), 400
+
+    cpf_validator = CPF()
+    
+    if cpf and not cpf_validator.validate(cpf):
+        return jsonify({'error': 'CPF inválido.'}), 400
+    
 
 
     senha_hash = generate_password_hash(senha)
@@ -132,6 +139,17 @@ def update_user(user_id):
         'nome_completo', 'email', 'senha', 'cidade', 'bairro',
         'telefone', 'habilidades', 'data_nasc', 'foto_perfil_PATH', 'conta_ativa'
     }
+
+    data_nasc_str = data.get('data_nasc')
+    if data_nasc_str:
+        try:
+            data['data_nasc'] = datetime.strptime(data_nasc_str, "%d-%m-%Y").date()
+        except ValueError:
+            return jsonify({'error': 'Formato de data inválido. Use DD-MM-YYYY.'}), 400
+        
+    telefone = data.get('telefone')
+    if telefone and len(telefone) > 11:
+        return jsonify({'error': 'Telefone inválido. Máximo de 11 caracteres.'}), 400    
 
     data = {k: v for k, v in data.items() if k in allowed_fields}
 
