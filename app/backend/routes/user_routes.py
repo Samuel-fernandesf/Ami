@@ -4,6 +4,8 @@ from middleware.jwt_util import token_required
 from repositories import UserRepo
 from validate_docbr import CPF
 from datetime import datetime
+from repositories import HabilidadeRepo
+from models import Habilidade
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -21,7 +23,7 @@ def create_user():
     bairro = data.get('bairro')
     telefone = data.get('telefone')
     data_nasc_str = data.get('data_nasc')
-    habilidades = data.get('habilidades', [])
+    habilidades = data.get('habilidades', []) #  Its a list of NAMES, not IDs
     foto_perfil_PATH = data.get('foto_perfil_PATH')
     senha = data.get('senha')
 
@@ -42,8 +44,18 @@ def create_user():
     if cpf and not cpf_validator.validate(cpf):
         return jsonify({'error': 'CPF inválido.'}), 400
     
+    # ============== Getting habilidades IDs from names ==============
+    habilidades_ids = []
+    for hab_name in habilidades:
+        hab : Habilidade = HabilidadeRepo.get_habilidade_by_name(hab_name)
+        if hab:
+            habilidades_ids.append(hab.id)
+        else:
+            #creates the habilidade if not exists
+            new_hab : Habilidade = HabilidadeRepo.create_habilidade(hab_name)
+            habilidades_ids.append(new_hab.id)
 
-
+    # =========== Hashing password ==============
     senha_hash = generate_password_hash(senha)
 
     # =========== Creating instance ==============
@@ -56,7 +68,7 @@ def create_user():
         bairro=bairro,
         telefone=telefone,
         data_nasc=data_nasc,
-        habilidades=habilidades,
+        habilidades=habilidades_ids,
         foto_perfil=foto_perfil_PATH
     )
 
@@ -140,6 +152,7 @@ def update_user(user_id):
         'telefone', 'habilidades', 'data_nasc', 'foto_perfil_PATH', 'conta_ativa'
     }
 
+    # ============== Data Validation ==============
     data_nasc_str = data.get('data_nasc')
     if data_nasc_str:
         try:
@@ -152,6 +165,23 @@ def update_user(user_id):
         return jsonify({'error': 'Telefone inválido. Máximo de 11 caracteres.'}), 400    
 
     data = {k: v for k, v in data.items() if k in allowed_fields}
+
+    # ============== Getting habilidades IDs from names ==============
+    habilidades = data.get('habilidades')
+    if habilidades:
+        habilidades_ids = []
+        
+        for hab_name in habilidades:
+            hab : Habilidade = HabilidadeRepo.get_habilidade_by_name(hab_name)
+            
+            if hab:
+                habilidades_ids.append(hab.id)
+            else:
+                #creates the habilidade if not exists
+                new_hab : Habilidade = HabilidadeRepo.create_habilidade(hab_name)
+                habilidades_ids.append(new_hab.id)
+
+        data['habilidades'] = habilidades_ids
 
     # ============== Hash password if changed ==============
     if 'senha' in data:
