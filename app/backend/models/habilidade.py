@@ -7,8 +7,8 @@ class Habilidade(db.Model):
     nome = db.Column(db.String(100), unique=True, nullable=False)
 
     #RELACIONAMENTOS
-    oportunidades = db.relationship('OportunidadeHabilidade', back_populates='habilidades', lazy='dynamic', cascade='all, delete-orphan')
-    voluntarios = db.relationship('VoluntarioHabilidade', back_populates='habilidades', lazy='dynamic', cascade='all, delete-orphan')
+    oportunidades = db.relationship('OportunidadeHabilidade', back_populates='habilidade', lazy='dynamic', cascade='all, delete-orphan')
+    voluntarios = db.relationship('VoluntarioHabilidade', back_populates='habilidade', lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, nome):
         self.nome = nome
