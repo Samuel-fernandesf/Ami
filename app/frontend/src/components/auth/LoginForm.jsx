@@ -17,20 +17,24 @@ export default function LoginForm({ firstInputRef }) {
     setError("");
     setLoading(true);
 
-    const res = await login(email, senha);
-    setLoading(false);
+    try {
+      const res = await login(email, senha);
+      setLoading(false);
 
-    if (res.ok) {
-      alert(`Bem-vindo, ${res.user?.nome_completo || res.user?.email || "usuário"}!`);
-      close();
-    } else {
-      setError(res.error || "Erro ao autenticar");
-      // Sugestão para criar conta quando user não existe
-      if (res.error && /não encontrado|nenhum usuário/i.test(res.error)) {
-        if (window.confirm("Usuário não encontrado. Deseja criar uma conta?")) {
-          switchTo("register");
+      if (res.ok) {
+        login(data.token);
+        navigate("/dashboard");
+      } else {
+        setError(res.error || "Erro ao autenticar");
+        if (res.status === 404 || /não encontrado|nenhum usuário/i.test(res.error || "")) {
+          if (window.confirm("Usuário não encontrado. Deseja criar uma conta?")) {
+            switchTo("register");
+          }
         }
       }
+    } catch (err) {
+      setLoading(false);
+      setError("Erro de rede ao autenticar");
     }
   };
 

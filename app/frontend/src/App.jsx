@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import RouterConfig from "./router/RouterConfig";
 import { ModalProvider } from "./components/modal/Modal";

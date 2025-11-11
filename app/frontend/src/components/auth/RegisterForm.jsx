@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useModal } from "../modal/Modal";
 import { useAuth } from "../../contexts/AuthContext";
 import "./AuthForm.css";
@@ -38,16 +38,30 @@ const validateCPF = (cpf) => {
   return resto === parseInt(cpf.substring(10, 11), 10);
 };
 
-/* converte File para base64 (usado só para preview & enviar como string) */
-const fileToBase64 = (file) =>
+/* compressão simples de imagem ao converter para base64 (redimensiona largura) */
+const fileToBase64AndCompress = (file, maxWidth = 1000, quality = 0.8) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error("Erro ao ler arquivo"));
-    reader.onload = () => resolve(reader.result);
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const scale = Math.min(1, maxWidth / img.width);
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        // compressa para jpeg (mais leve)
+        const base64 = canvas.toDataURL("image/jpeg", quality);
+        resolve(base64);
+      };
+      img.onerror = (e) => reject(new Error("Erro ao processar imagem"));
+      img.src = reader.result;
+    };
     reader.readAsDataURL(file);
   });
 
-/* helper para formatar data (YYYY-MM-DD -> DD-MM-YYYY) */
 const formatDateToDDMMYYYY = (isoDate) => {
   if (!isoDate) return "";
   const d = new Date(isoDate);
@@ -100,12 +114,19 @@ export default function RegisterForm({ firstInputRef }) {
     if (type === "file") {
       const file = files && files[0];
       if (file) {
+        // limite de segurança: 5 MB
+        if (file.size > 5 * 1024 * 1024) {
+          setErrors((p) => ({ ...p, foto_perfil: "Arquivo muito grande (máx 5MB)" }));
+          return;
+        }
         setFormData((p) => ({ ...p, foto_perfil_file: file }));
         try {
-          const base64 = await fileToBase64(file);
+          const base64 = await fileToBase64AndCompress(file, 1000, 0.8);
           setFormData((p) => ({ ...p, foto_perfil_base64: base64 }));
+          setErrors((p) => ({ ...p, foto_perfil: null }));
         } catch (err) {
           console.error("Erro ao converter imagem:", err);
+          setErrors((p) => ({ ...p, foto_perfil: "Erro ao processar imagem" }));
         }
       }
       return;
@@ -128,64 +149,37 @@ export default function RegisterForm({ firstInputRef }) {
     }));
   };
 
-  /* validação local por etapas */
+  /* validação por etapas */
   const validateStep1 = () => {
     const errs = {};
-    if (!formData.email || !/^\S+@\S+\.\S+$/.test(formData.email))
-      errs.email = "Email inválido";
-    if (!formData.senha || formData.senha.length < 6)
-      errs.senha = "Senha deve ter ao menos 6 caracteres";
-    if (formData.senha !== formData.confirmSenha)
-      errs.confirmSenha = "Senhas não coincidem";
+    if (!formData.email || !/^\S+@\S+\.\S+$/.test(formData.email)) errs.email = "Email inválido";
+    if (!formData.senha || formData.senha.length < 6) errs.senha = "Senha deve ter ao menos 6 caracteres";
+    if (formData.senha !== formData.confirmSenha) errs.confirmSenha = "Senhas não coincidem";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const validateStep2 = async () => {
+  const validateStep2 = () => {
     const errs = {};
     const cpfDigits = formData.cpf.replace(/\D/g, "");
     if (!validateCPF(cpfDigits)) errs.cpf = "CPF inválido";
     if (!formData.nome_completo) errs.nome_completo = "Nome obrigatório";
     if (!formData.data_nasc) errs.data_nasc = "Data de nascimento obrigatória";
-    if (!formData.telefone) errs.telefone = "Telefone obrigatório";
+    const phoneDigits = formData.telefone.replace(/\D/g, "");
+    if (!phoneDigits || phoneDigits.length > 11) errs.telefone = "Telefone inválido (até 11 dígitos)";
     if (!formData.foto_perfil_base64) errs.foto_perfil = "Adicione uma foto de perfil";
     setErrors(errs);
-    if (Object.keys(errs).length > 0) return false;
-
-    // tentativa opcional de validar CPF via API externa; falha não bloqueante
-    setLoading(true);
-    try {
-      const cpfDigits = formData.cpf.replace(/\D/g, "");
-      const response = await fetch(`https://receitaws.com.br/v1/cpf/${cpfDigits}`);
-      const data = await response.json();
-      if (data.status && data.status === "ERROR") {
-        console.warn("ReceitaWS: CPF não encontrado/erro");
-      } else {
-        console.log("ReceitaWS:", data.nome || "verificado");
-      }
-    } catch (err) {
-      console.warn("ReceitaWS indisponível:", err);
-    } finally {
-      setLoading(false);
-    }
-
-    return true;
+    return Object.keys(errs).length === 0;
   };
 
   const nextStep = async () => {
-    if (step === 1) {
-      if (!validateStep1()) return;
-    }
-    if (step === 2) {
-      const ok = await validateStep2();
-      if (!ok) return;
-    }
+    if (step === 1 && !validateStep1()) return;
+    if (step === 2 && !validateStep2()) return;
     setStep((s) => Math.min(4, s + 1));
   };
 
   const prevStep = () => setStep((s) => Math.max(1, s - 1));
 
-  /* envia para AuthContext.register (que por sua vez faz fetch /users) */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -196,35 +190,45 @@ export default function RegisterForm({ firstInputRef }) {
       return;
     }
 
+    // compilar habilidades (inclui outras)
     const habilidadesFinal = [
       ...formData.habilidades,
       ...(formData.outrasHabilidades
-        ? formData.outrasHabilidades.split(",").map((h) => h.trim())
+        ? formData.outrasHabilidades.split(",").map((h) => h.trim()).filter(Boolean)
         : []),
     ];
 
+    // preparar payload conforme backend espera (data_nasc em DD-MM-YYYY)
+    const cpfDigits = formData.cpf.replace(/\D/g, "");
+    const telefoneDigits = formData.telefone.replace(/\D/g, "");
     const payload = {
       nome_completo: formData.nome_completo,
-      cpf: formData.cpf.replace(/\D/g, ""), // só dígitos
+      cpf: cpfDigits,
       email: formData.email,
       cidade: formData.cidade,
       bairro: formData.bairro,
-      telefone: formData.telefone.replace(/\D/g, ""), // só dígitos
-      data_nasc: formatDateToDDMMYYYY(formData.data_nasc), // DD-MM-YYYY
+      telefone: telefoneDigits,
+      data_nasc: formatDateToDDMMYYYY(formData.data_nasc),
       habilidades: habilidadesFinal,
-      foto_perfil_PATH: formData.foto_perfil_base64, // base64 string
+      foto_perfil_PATH: formData.foto_perfil_base64,
       senha: formData.senha,
     };
 
     setLoading(true);
-    const res = await register(payload);
-    setLoading(false);
-
-    if (res.ok) {
-      alert("Cadastro realizado com sucesso!");
-      close();
-    } else {
-      alert("Erro ao cadastrar: " + (res.error || "Erro desconhecido"));
+    try {
+      // usa register do AuthContext (ele já faz fetch('/users'))
+      const res = await register(payload);
+      if (res.ok) {
+        alert("Cadastro realizado com sucesso!");
+        close();
+      } else {
+        alert("Erro ao cadastrar: " + (res.error || "Erro desconhecido"));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erro de rede ao cadastrar.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -330,8 +334,6 @@ export default function RegisterForm({ firstInputRef }) {
             )}
             {errors.foto_perfil && <small className="error">{errors.foto_perfil}</small>}
 
-            {loading && <p>🔄 Validando CPF...</p>}
-
             <div style={{ marginTop: 12 }}>
               <button type="button" onClick={prevStep}>Anterior</button>
               <button type="button" onClick={nextStep} style={{ marginLeft: 8 }}>Próximo</button>
@@ -397,7 +399,9 @@ export default function RegisterForm({ firstInputRef }) {
 
             <div style={{ marginTop: 12 }}>
               <button type="button" onClick={prevStep}>Anterior</button>
-              <button type="submit" style={{ marginLeft: 8 }}>Finalizar Cadastro</button>
+              <button type="submit" style={{ marginLeft: 8 }} disabled={loading}>
+                {loading ? "Enviando..." : "Finalizar Cadastro"}
+              </button>
             </div>
           </>
         );

@@ -1,10 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+// src/contexts/AuthContext.jsx
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-
-/**
- * AuthContext: provê auth state (user, token), actions: login, register, logout.
- * Persiste token/user em localStorage.
- */
 
 const AuthContext = createContext();
 
@@ -15,11 +11,15 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
 
-  // init from localStorage
   const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
   const [user, setUser] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("userData")) || null;
+      const raw = localStorage.getItem("userData");
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      // Nunca armazene senha aqui. Se já tiver, remova:
+      if (parsed && parsed.senha) delete parsed.senha;
+      return parsed;
     } catch {
       return null;
     }
@@ -32,28 +32,60 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   useEffect(() => {
-    if (user) localStorage.setItem("userData", JSON.stringify(user));
-    else localStorage.removeItem("userData");
+    if (user) {
+      const u = { ...user };
+      if (u.senha) delete u.senha; // segurança: nunca salvar senha
+      localStorage.setItem("userData", JSON.stringify(u));
+    } else {
+      localStorage.removeItem("userData");
+    }
   }, [user]);
 
-  const isAuthenticated = !!token || !!user; // for local fallback
+  // Autenticação baseada em token é mais confiável
+  const isAuthenticated = Boolean(token);
 
-  // helper for authenticated fetch
-  const authFetch = async (url, opts = {}) => {
+  // authFetch melhora o tratamento de erros e logout em 401
+  const authFetch = useCallback(async (url, opts = {}) => {
     const headers = opts.headers ? { ...opts.headers } : {};
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (!headers["Content-Type"] && !(opts.body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
     }
-    headers["Content-Type"] = headers["Content-Type"] || "application/json";
-    const res = await fetch(url, { ...opts, headers });
-    return res;
-  };
 
-  // LOGIN: tenta backend /auth/login, senão fallback localStorage
+    try {
+      const res = await fetch(url, { ...opts, headers });
+      if (res.status === 401) {
+        // token expirou ou inválido -> logout automático
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userData");
+        // opcional: redirecionar
+        navigate("/", { replace: true });
+        return { ok: false, status: 401, error: "Não autorizado" };
+      }
+
+      // tenta parse seguro
+      let json = null;
+      try {
+        json = await res.json();
+      } catch (e) {
+        // resposta sem JSON
+      }
+
+      if (!res.ok) {
+        return { ok: false, status: res.status, error: json?.error || json || "Erro na requisição" };
+      }
+
+      return { ok: true, status: res.status, data: json };
+    } catch (err) {
+      return { ok: false, status: 0, error: err.message || "Erro de rede" };
+    }
+  }, [token, navigate]);
+
   const login = async (email, senha) => {
     setLoading(true);
     try {
-      // tenta endpoint do backend
       const res = await fetch("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,49 +95,29 @@ export function AuthProvider({ children }) {
       if (res.ok) {
         const body = await res.json();
         if (body.token) setToken(body.token);
-        if (body.user) setUser(body.user);
+        if (body.user) {
+          const u = { ...body.user };
+          if (u.senha) delete u.senha;
+          setUser(u);
+        }
         setLoading(false);
-        return { ok: true, user: body.user || null };
+        return { ok: true, user: body.user || null, token: body.token || null };
       }
 
-      // se backend não existir / falhar (404/500), tenta fallback local (apenas para dev)
-      // fallback: compara com userData salvo localmente (útil para testes sem backend)
-      const stored = JSON.parse(localStorage.getItem("userData") || "null");
-      if (stored && stored.email === email && stored.senha === senha) {
-        // cria token local (dummy)
-        const fakeToken = "local-dev-token";
-        setToken(fakeToken);
-        setUser(stored);
-        setLoading(false);
-        return { ok: true, user: stored };
-      }
-
-      // autenticação falhou
+      // Se falhou, tenta parse seguro da resposta
       const errBody = await res.json().catch(() => ({}));
       setLoading(false);
       return { ok: false, error: errBody.error || "Falha ao autenticar" };
     } catch (err) {
-      // rede/endpoint indisponível -> fallback local
-      try {
-        const stored = JSON.parse(localStorage.getItem("userData") || "null");
-        if (stored && stored.email === email && stored.senha === senha) {
-          const fakeToken = "local-dev-token";
-          setToken(fakeToken);
-          setUser(stored);
-          setLoading(false);
-          return { ok: true, user: stored };
-        }
-      } catch {}
       setLoading(false);
       return { ok: false, error: "Erro de rede ao autenticar" };
     }
   };
 
-  // REGISTER: chama POST /users. Se backend retornar 201, tenta login automático.
   const register = async (payload) => {
     setLoading(true);
     try {
-      // envia JSON para /users (conforme sua rota Flask)
+      // Evite enviar photo base64 diretamente quando for grande — ver sugestões abaixo.
       const res = await fetch("/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -114,26 +126,26 @@ export function AuthProvider({ children }) {
 
       const body = await res.json().catch(() => ({}));
 
-      if (res.status === 201) {
-        // registro OK. tenta login automático via endpoint /auth/login
-        // se não houver, armazena o user retornado e retorna sucesso.
+      if (res.status === 201 || res.ok) {
+        // tenta login automático se a API fornece endpoint
         const email = payload.email;
         const senha = payload.senha;
-
-        // Tenta login via endpoint
-        const loginResult = await login(email, senha);
-        if (loginResult.ok) {
-          setLoading(false);
-          return { ok: true, user: loginResult.user || body };
-        } else {
-          // login automático não funcionou (ex: /auth/login não existe) -> salva user retornado
-          if (body) {
-            setUser(body);
-            // não há token -> token permanece null (ou pode criar local token)
+        if (email && senha) {
+          const loginResult = await login(email, senha);
+          if (loginResult.ok) {
+            setLoading(false);
+            return { ok: true, user: loginResult.user };
           }
-          setLoading(false);
-          return { ok: true, user: body };
         }
+
+        // Caso não faça login automático, guardamos apenas os dados públicos do user
+        if (body) {
+          const u = { ...body };
+          if (u.senha) delete u.senha;
+          setUser(u);
+        }
+        setLoading(false);
+        return { ok: true, user: body || null };
       } else {
         setLoading(false);
         return { ok: false, error: body?.error || "Erro ao cadastrar" };
@@ -147,11 +159,9 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setToken(null);
     setUser(null);
-    // opcional: limpar localStorage keys
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
-    // redirecionar para home
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const value = {

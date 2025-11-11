@@ -1,10 +1,11 @@
+import React from "react";
 import "./FooterComponent.css";
 
 export default function FooterComponent() {
   return (
     <footer className="footer">
       <section>
-        <p>© 2025 Ami. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Ami. Todos os direitos reservados.</p>
       </section>
     </footer>
   );

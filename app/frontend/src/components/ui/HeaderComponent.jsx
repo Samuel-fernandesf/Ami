@@ -1,3 +1,4 @@
+import React from "react";
 import { useModal } from "../modal/Modal";
 import "./HeaderComponent.css";
 
@@ -7,7 +8,7 @@ export default function HeaderComponent() {
   return (
     <header className="header">
       <h1 className="logo">Ami</h1>
-      <nav>
+      <nav aria-label="main navigation">
         <ul>
           <li>
             <button onClick={() => open("register")}>Cadastrar-se</button>

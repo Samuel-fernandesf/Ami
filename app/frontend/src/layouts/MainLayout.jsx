@@ -4,7 +4,7 @@ import FooterComponent from "../components/ui/FooterComponent";
 import Modal, { useModal } from "../components/modal/Modal";
 
 export default function MainLayout({ children }) {
-  const { modalType } = useModal();
+  const { modalType } = useModal(); // assume hook retorna { modalType, open, close, ... }
 
   return (
     <div className="layout">
@@ -12,8 +12,8 @@ export default function MainLayout({ children }) {
       <main>{children}</main>
       <FooterComponent />
 
-      {/* Modal global (aparece quando modalType não é null) */}
-      {modalType && <Modal />}
+      {/* Modal global */}
+      {modalType && <Modal type={modalType} />}
     </div>
   );
 }
