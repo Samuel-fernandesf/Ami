@@ -28,6 +28,7 @@ def create_app():
     from routes.oportunidade_routes import oportunidade_bp
     from routes.organizacao_routes import organizacao_bp
     from routes.user_routes import user_bp
+    from routes.habilidade_routes import habilidade_bp
 
 
     #=============== Register blueprints ===================
@@ -36,6 +37,7 @@ def create_app():
     app.register_blueprint(oportunidade_bp, url_prefix='/oportunidade')
     app.register_blueprint(organizacao_bp, url_prefix='/organizacao')
     app.register_blueprint(user_bp, url_prefix='/user')
+    app.register_blueprint(habilidade_bp, url_prefix='/habilidade')
 
     return app
 

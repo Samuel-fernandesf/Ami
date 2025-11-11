@@ -111,6 +111,9 @@ class UserRepo:
         user = UserRepo.get_user_by_id(user_id)
         if not user:
             return False
+        
+        # Remove invalid IDs
+        habilidade_ids = [hid for hid in habilidade_ids if Habilidade.query.filter_by(id=hid).first()]
 
         # Remove habilidades not in the new list
         existing_habilidades : List[VoluntarioHabilidade] = VoluntarioHabilidade.query.filter_by(id_usuario=user.id).all()
