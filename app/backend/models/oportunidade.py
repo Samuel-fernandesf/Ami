@@ -20,7 +20,7 @@ class Oportunidade(db.Model):
     criado_em = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     #RELACIONAMENTOS
-    organizacao = db.relationship('Organizacao', back_populates='organizacao', lazy='select')
+    organizacao = db.relationship('Organizacao', back_populates='oportunidades', lazy='select')
     habilidades = db.relationship('OportunidadeHabilidade', back_populates='oportunidade', lazy='dynamic', cascade='all, delete-orphan')
     inscricoes = db.relationship('Inscricao', back_populates='oportunidade', lazy='dynamic', cascade='all, delete-orphan')
 
