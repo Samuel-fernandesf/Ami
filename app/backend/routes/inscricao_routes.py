@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from middleware.jwt_util import token_required
-from repositories.inscricao_repo import InscricaoRepo
+from repositories import InscricaoRepo
 from models.inscricao import Inscricao
 from datetime import datetime
 

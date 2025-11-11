@@ -3,7 +3,6 @@ from werkzeug.security import generate_password_hash
 from middleware.jwt_util import token_required
 from repositories import UserRepo
 from datetime import datetime
-from models.usuario import Usuario as User
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -21,7 +20,7 @@ def create_user():
     bairro = data.get('bairro')
     telefone = data.get('telefone')
     data_nasc_str = data.get('data_nasc')
-    # habilidades = data.get('habilidades', [])
+    habilidades = data.get('habilidades', [])
     foto_perfil_PATH = data.get('foto_perfil_PATH')
     senha = data.get('senha')
 
@@ -49,8 +48,8 @@ def create_user():
         cidade=cidade,
         bairro=bairro,
         telefone=telefone,
-        data_nasc=data_nasc, 
-        # habilidades=habilidades,
+        data_nasc=data_nasc,
+        habilidades=habilidades,
         foto_perfil=foto_perfil_PATH
     )
 
@@ -58,7 +57,7 @@ def create_user():
     if not user:
         return jsonify({'error': 'Email ou CPF já está em uso.'}), 400
 
-    user_dict = user.to_dict()
+    user_dict : dict = user.to_dict()
     user_dict.pop('senha', None)
 
     return jsonify(user_dict), 201
@@ -82,6 +81,7 @@ def get_user_by_email(email):
     return jsonify(user.to_dict()), 200
 
 
+
 # ================= GET BY TELEFONE ===================
 @user_bp.route('/telefone/<string:telefone>', methods=['GET'])
 def get_user_by_telefone(telefone):
@@ -90,6 +90,17 @@ def get_user_by_telefone(telefone):
         return jsonify({'error': 'Usuário não encontrado.'}), 404
     return jsonify(user.to_dict()), 200
 
+# ================ GET HABILIDADES ==================== 
+@user_bp.route('/<int:user_id>/habilidades', methods=['GET'])
+def get_user_habilidades(user_id):
+    user = UserRepo.get_user_by_id(user_id)
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado.'}), 404
+
+    habilidades = UserRepo.get_user_habilidades(user)
+    habilidade_list = [h.to_dict() for h in habilidades]
+
+    return jsonify(habilidade_list), 200
 
 # ================= GET ALL ===================
 @user_bp.route('/', methods=['GET'])
@@ -153,3 +164,4 @@ def delete_user(user_id):
         return jsonify({'error': 'Usuário não encontrado.'}), 404
 
     return jsonify({'message': 'Usuário deletado com sucesso.'}), 200
+

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 from middleware.jwt_util import token_required
-from repositories.oportunidade_repo import OportunidadeRepo
+from repositories import OportunidadeRepo
 from models.oportunidade import Oportunidade
 from models.usuario import Usuario as User
 
@@ -29,6 +29,7 @@ def create_oportunidade():
     num_vagas = data.get('num_vagas')
     requisitos = data.get('requisitos')
     tags = data.get('tags')
+    habilidades = data.get('habilidades', [])
 
     #=========== validation ==============
     if not all([titulo, descricao, local_endereco, comunidade, data_hora, duracao_horas, num_vagas]):
@@ -45,6 +46,7 @@ def create_oportunidade():
         duracao_horas=duracao_horas,
         num_vagas=num_vagas,
         requisitos=requisitos,
+        habilidades=habilidades,
         tags=tags
     )
 
@@ -95,7 +97,7 @@ def update_oportunidade(id_oportunidade):
     #=========== allowed fields ==============
     allowed_fields = {
         'titulo', 'descricao', 'local_endereco', 'comunidade', 'data_hora',
-        'duracao_horas', 'num_vagas', 'requisitos', 'tags'
+        'duracao_horas', 'num_vagas', 'requisitos', 'tags', 'habilidades'
     }
 
     data = {k: v for k, v in data.items() if k in allowed_fields}

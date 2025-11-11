@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from repositories.user_repo import UserRepo
+from repositories import UserRepo
 from werkzeug.security import check_password_hash
 from middleware.jwt_util import generate_token
 

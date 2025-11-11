@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from middleware.jwt_util import token_required
-from repositories.organizacao_repo import OrganizacaoRepo
+from repositories import OrganizacaoRepo
 from repositories.user_repo import UserRepo
 from models.organizaçao import Organizacao
 

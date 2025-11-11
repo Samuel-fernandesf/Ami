@@ -1,11 +1,9 @@
 from extensions import db
 from typing import Optional, List
-from datetime import date
 from models import Habilidade
-import json
+from repositories import UserRepo, OportunidadeRepo
 
 class HabilidadeRepo:
- 
     def create_habilidade(nome:str) -> Habilidade:
         hab = Habilidade(nome=nome)
 
@@ -49,3 +47,19 @@ class HabilidadeRepo:
         db.session.commit()
         return True
     
+    def get_habilidades_by_user(user_id: int) -> List[Habilidade]:
+        return UserRepo.get_user_habilidades(user_id)
+    
+    def user_has_habilidade(user_id: int, habilidade_id: int) -> bool:
+        habilidades = UserRepo.get_user_habilidades(user_id)
+        habilidade = HabilidadeRepo.get_habilidade_by_id(habilidade_id)
+        return habilidade in habilidades
+    
+    def get_habilidades_by_oportunidade(oportunidade_id: int) -> List[Habilidade]:
+        return OportunidadeRepo.get_oportunidade_habilidades(oportunidade_id)
+    
+    def oportunidade_has_habilidade(oportunidade_id: int, habilidade_id: int) -> bool:
+        habilidades = OportunidadeRepo.get_oportunidade_habilidades(oportunidade_id)
+        habilidade = HabilidadeRepo.get_habilidade_by_id(habilidade_id)
+        return habilidade in habilidades
+
