@@ -73,7 +73,7 @@ class OportunidadeHabilidade(db.Model):
     )
 
     #RELACIONAMENTOS
-    oportunidade = db.relationship('Oportunidade', back_populates='requisitos', lazy='select')
+    oportunidade = db.relationship('Oportunidade', back_populates='habilidades', lazy='select')
     habilidade = db.relationship('Habilidade', back_populates='oportunidades', lazy='select')
 
     def __init__(self, id_oportunidade, id_habilidade):

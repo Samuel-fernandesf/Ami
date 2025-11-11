@@ -13,7 +13,6 @@ class Oportunidade(db.Model):
     data_hora = db.Column(db.DateTime, nullable=False)
     duracao_horas = db.Column(db.Integer, nullable=False)
     num_vagas = db.Column(db.Integer, nullable=False)
-    requisitos = db.Column(db.String(1024), nullable=True)
 
     #OPÇÃO CORRETA SERIA RETIRAR ESSE COLUNA E COLOCA-LA COMO TABELA SEPARADA
     tags = db.Column(db.String(512), nullable=True)
@@ -22,11 +21,11 @@ class Oportunidade(db.Model):
 
     #RELACIONAMENTOS
     organizacao = db.relationship('Organizacao', back_populates='organizacao', lazy='select')
-    requisitos = db.relationship('OportunidadeHabilidade', back_populates='oportunidade', lazy='dynamic', cascade='all, delete-orphan')
+    habilidades = db.relationship('OportunidadeHabilidade', back_populates='oportunidade', lazy='dynamic', cascade='all, delete-orphan')
     inscricoes = db.relationship('Inscricao', back_populates='oportunidade', lazy='dynamic', cascade='all, delete-orphan')
 
 
-    def __init__(self, id_organizacao, titulo, descricao, local_endereco, comunidade, data_hora, duracao_horas, num_vagas, requisitos=None, tags=None):
+    def __init__(self, id_organizacao, titulo, descricao, local_endereco, comunidade, data_hora, duracao_horas, num_vagas, tags=None):
         self.id_organizacao = id_organizacao
         self.titulo = titulo
         self.descricao = descricao
@@ -35,7 +34,6 @@ class Oportunidade(db.Model):
         self.data_hora = data_hora
         self.duracao_horas = duracao_horas
         self.num_vagas = num_vagas
-        self.requisitos = requisitos
         self.tags = tags
 
     def __repr__(self):
@@ -52,13 +50,12 @@ class Oportunidade(db.Model):
             'data_hora': self.data_hora.isoformat() if self.data_hora else None,
             'duracao_horas': self.duracao_horas,
             'num_vagas': self.num_vagas,
-            'requisitos': self.requisitos,
             'tags': self.tags,
             'status': self.status,
             'criado_em': self.criado_em.isoformat() if self.criado_em else None
         }
 
     def update_from_dict(self, data):
-        for field in ['id_organizacao', 'titulo', 'descricao', 'local_endereco', 'comunidade', 'data_hora', 'duracao_horas', 'num_vagas', 'requisitos', 'tags', 'status']:
+        for field in ['id_organizacao', 'titulo', 'descricao', 'local_endereco', 'comunidade', 'data_hora', 'duracao_horas', 'num_vagas', 'tags', 'status']:
             if field in data:
                 setattr(self, field, data[field])
