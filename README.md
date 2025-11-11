@@ -25,7 +25,7 @@ O projeto foi desenvolvido como parte da disciplina de **Inovação e Tecnologia
 - [Equipe](#equipe)
 - [Metodologia](#metodologia)
 - [Trabalhos Relacionados](#trabalhos-relacionados)
-- [Licensa](#licença)
+- [Licença](#licença)
 
 
 
