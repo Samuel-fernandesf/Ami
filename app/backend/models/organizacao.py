@@ -1,5 +1,5 @@
 from extensions import db
-from . import StatusOrganizacao
+from .enums import StatusOrganizacao
 
 class Organizacao(db.Model):
     __tablename__ = 'organizacao'

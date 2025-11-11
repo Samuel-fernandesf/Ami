@@ -1,7 +1,7 @@
 from extensions import db
 from typing import Optional, List
 from models import Habilidade
-from repositories import UserRepo, OportunidadeRepo
+from . import UserRepo, OportunidadeRepo
 
 class HabilidadeRepo:
     def create_habilidade(nome:str) -> Habilidade:

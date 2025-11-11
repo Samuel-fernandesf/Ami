@@ -1,5 +1,5 @@
 from extensions import db
-from . import StatusOportunidades
+from .enums import StatusOportunidades
 
 class Oportunidade(db.Model):
     __tablename__ = 'oportunidade'

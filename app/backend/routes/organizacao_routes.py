@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash
 from middleware.jwt_util import token_required
 from repositories import OrganizacaoRepo
 from repositories.user_repo import UserRepo
-from models.organizaçao import Organizacao
+from models.organizacao import Organizacao
 
 
 organizacao_bp = Blueprint('organizacao_bp', __name__)
