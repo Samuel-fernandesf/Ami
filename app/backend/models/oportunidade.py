@@ -13,6 +13,8 @@ class Oportunidade(db.Model):
     data_hora = db.Column(db.DateTime, nullable=False)
     duracao_horas = db.Column(db.Integer, nullable=False)
     num_vagas = db.Column(db.Integer, nullable=False)
+    foto_local = db.Column(db.String(255), nullable=True)
+
 
     #OPÇÃO CORRETA SERIA RETIRAR ESSE COLUNA E COLOCA-LA COMO TABELA SEPARADA
     tags = db.Column(db.String(512), nullable=True)
