@@ -1,8 +1,10 @@
 from flask import Flask, jsonify
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from extensions import Config
 from extensions import db
 from flask_migrate import Migrate
+import os
 
 migrate = Migrate()
 
@@ -38,6 +40,13 @@ def create_app():
     app.register_blueprint(organizacao_bp, url_prefix='/organizacao')
     app.register_blueprint(user_bp, url_prefix='/user')
     app.register_blueprint(habilidade_bp, url_prefix='/habilidade')
+
+
+    #============ Special route to serve files ================
+    @app.route('/uploads/<path:filename>')
+    def uploaded_file(filename):
+        uploads_dir = os.path.join(app.root_path, 'uploads')
+        return send_from_directory(uploads_dir, filename)
 
     return app
 

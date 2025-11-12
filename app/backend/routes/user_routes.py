@@ -6,8 +6,13 @@ from validate_docbr import CPF
 from datetime import datetime
 from repositories import HabilidadeRepo
 from models import Habilidade
+from secrets import token_hex
+import base64
+import os
 
 user_bp = Blueprint('user_bp', __name__)
+
+
 
 
 # ================= CREATE USER ===================
@@ -24,7 +29,7 @@ def create_user():
     telefone = data.get('telefone')
     data_nasc_str = data.get('data_nasc')
     habilidades = data.get('habilidades', []) #  Its a list of NAMES, not IDs
-    foto_perfil_PATH = data.get('foto_perfil_PATH')
+    foto_perfil = data.get('foto_perfil_PATH') # An entire image, coded in base64
     senha = data.get('senha')
 
     # =========== Validation ==============
@@ -44,6 +49,9 @@ def create_user():
     if cpf and not cpf_validator.validate(cpf):
         return jsonify({'error': 'CPF inválido.'}), 400
     
+    if not foto_perfil:
+        return jsonify({'error':'A Imagem é obrigatória'}), 400
+    
     # ============== Getting habilidades IDs from names ==============
     habilidades_ids = []
     for hab_name in habilidades:
@@ -57,6 +65,16 @@ def create_user():
 
     # =========== Hashing password ==============
     senha_hash = generate_password_hash(senha)
+
+    # ======== Decoding and saving image ===============
+    nome_foto = f"{token_hex(16)}.png"
+
+    try:
+        foto_perfil_PATH = salvar_imagem(foto_perfil,nome_foto)
+        
+    except Exception as e:
+        return jsonify({"error":"Ocorreu um erro ao tentar salvar a imagem"})
+
 
     # =========== Creating instance ==============
     user = UserRepo.create_user(
@@ -98,8 +116,6 @@ def get_user_by_email(email):
     if not user:
         return jsonify({'error': 'Usuário não encontrado.'}), 404
     return jsonify(user.to_dict()), 200
-
-
 
 # ================= GET BY TELEFONE ===================
 @user_bp.route('/telefone/<string:telefone>', methods=['GET'])
@@ -166,6 +182,16 @@ def update_user(user_id):
 
     data = {k: v for k, v in data.items() if k in allowed_fields}
 
+    # ======== Decoding and saving image ===============
+    nome_foto = f"{token_hex(16)}.png"
+
+    try:
+        data["foto_perfil_PATH"] = salvar_imagem(data["foto_perfil_PATH"],nome_foto)
+        
+    except Exception as e:
+        return jsonify({"error":"Ocorreu um erro ao tentar salvar a imagem"})
+
+
     # ============== Getting habilidades IDs from names ==============
     habilidades = data.get('habilidades')
     if habilidades:
@@ -213,3 +239,38 @@ def delete_user(user_id):
 
     return jsonify({'message': 'Usuário deletado com sucesso.'}), 200
 
+
+def salvar_imagem(imagem_base64, nome_arquivo):
+    # Verifica se a base64 começa com "data:image"
+    if not imagem_base64.startswith('data:image'):
+        raise ValueError("Formato inválido. A imagem não contém dados válidos de imagem.")
+
+    # Extrai o tipo da imagem (ex: png, jpeg, jpg, gif)
+    tipo_imagem = imagem_base64.split(';')[0].split('/')[1]
+
+    # Tipos de imagem permitidos
+    tipos_permitidos = ['png', 'jpeg', 'jpg', 'gif']
+
+    # Verifica se o tipo da imagem é válido
+    if tipo_imagem not in tipos_permitidos:
+        raise ValueError(f"Formato de imagem não suportado. Apenas os formatos {', '.join(tipos_permitidos)} são permitidos.")
+
+    # Remove o prefixo "data:image/format;base64,"
+    imagem_base64 = imagem_base64.split(',')[1]
+    
+    # Decodifica a string base64
+    imagem_decodificada = base64.b64decode(imagem_base64)
+
+    # Define o caminho para salvar a imagem (aqui estamos salvando no diretório 'uploads')
+    # Utiliza o tipo da imagem para garantir que a extensão correta seja usada
+    nome_arquivo_com_extensao = f"{nome_arquivo}.{tipo_imagem}"
+    caminho = os.path.join('uploads', nome_arquivo_com_extensao)
+
+    # Cria o diretório 'uploads' caso não exista
+    os.makedirs(os.path.dirname(caminho), exist_ok=True)
+
+    # Salva o arquivo
+    with open(caminho, 'wb') as f:
+        f.write(imagem_decodificada)
+
+    return caminho
