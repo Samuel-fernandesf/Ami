@@ -14,6 +14,7 @@ class Organizacao(db.Model):
     endereco_matriz = db.Column(db.String(255), nullable=False)
     contato = db.Column(db.String(11), nullable=False)
     documento = db.Column(db.String(255), nullable=True)
+    foto_org = db.Column(db.String(255), nullable=True)
     criado_em = db.Column(db.DateTime, default=db.func.current_timestamp())
     aprovada = db.Column(db.Enum(StatusOrganizacao), default=StatusOrganizacao.pendente, nullable=False)
 
