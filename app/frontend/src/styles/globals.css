@@ -1,0 +1,265 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  /* Cores inspiradas no Brasil */
+  --background: #fefffe;
+  --foreground: #1a2e1a;
+  --card: #ffffff;
+  --card-foreground: #1a2e1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a2e1a;
+  /* Verde brasileiro moderno como cor primária */
+  --primary: #009B3A;
+  --primary-foreground: #ffffff;
+  /* Amarelo brasileiro como secundária */
+  --secondary: #fff8e1;
+  --secondary-foreground: #2d5016;
+  --muted: #f1f8f1;
+  --muted-foreground: #5a6b5a;
+  /* Azul brasileiro como accent */
+  --accent: #e3f2fd;
+  --accent-foreground: #1565c0;
+  --destructive: #d32f2f;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 155, 58, 0.15);
+  --input: transparent;
+  --input-background: #f8fff8;
+  --switch-background: #c8e6c9;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #009B3A;
+  /* Charts com cores brasileiras */
+  --chart-1: #009B3A; /* Verde Brasil */
+  --chart-2: #FEDF00; /* Amarelo Brasil */
+  --chart-3: #002776; /* Azul Brasil */
+  --chart-4: #00a651; /* Verde claro */
+  --chart-5: #1976d2; /* Azul vibrante */
+  --radius: 0.75rem;
+  --sidebar: #f8fff8;
+  --sidebar-foreground: #1a2e1a;
+  --sidebar-primary: #009B3A;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e8f5e8;
+  --sidebar-accent-foreground: #2d5016;
+  --sidebar-border: rgba(0, 155, 58, 0.1);
+  --sidebar-ring: #009B3A;
+  /* Cores brasileiras adicionais */
+  --brasil-green: #009B3A;
+  --brasil-yellow: #FEDF00;
+  --brasil-blue: #002776;
+  --brasil-green-light: #4caf50;
+  --brasil-green-dark: #00692b;
+  --brasil-yellow-light: #fff176;
+  --brasil-yellow-dark: #f9a825;
+  --brasil-blue-light: #1976d2;
+  --brasil-blue-dark: #001a4d;
+}
+
+.dark {
+  /* Modo escuro com identidade brasileira */
+  --background: #0a1a0a;
+  --foreground: #e8f5e8;
+  --card: #1a2e1a;
+  --card-foreground: #e8f5e8;
+  --popover: #1a2e1a;
+  --popover-foreground: #e8f5e8;
+  /* Verde mais claro para contraste no dark mode */
+  --primary: #4caf50;
+  --primary-foreground: #ffffff;
+  --secondary: #2d4a2d;
+  --secondary-foreground: #c8e6c9;
+  --muted: #1e3a1e;
+  --muted-foreground: #81c784;
+  /* Azul brasileiro adaptado para dark mode */
+  --accent: #1a3a5c;
+  --accent-foreground: #90caf9;
+  --destructive: #ef5350;
+  --destructive-foreground: #ffffff;
+  --border: rgba(76, 175, 80, 0.2);
+  --input: #1a2e1a;
+  --ring: #4caf50;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  /* Charts adaptados para dark mode */
+  --chart-1: #4caf50; /* Verde claro */
+  --chart-2: #ffeb3b; /* Amarelo adaptado */
+  --chart-3: #2196f3; /* Azul adaptado */
+  --chart-4: #66bb6a; /* Verde mais claro */
+  --chart-5: #42a5f5; /* Azul vibrante */
+  --sidebar: #0f2b0f;
+  --sidebar-foreground: #e8f5e8;
+  --sidebar-primary: #4caf50;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e3a1e;
+  --sidebar-accent-foreground: #c8e6c9;
+  --sidebar-border: rgba(76, 175, 80, 0.15);
+  --sidebar-ring: #4caf50;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Cores brasileiras customizadas */
+  --color-brasil-green: var(--brasil-green);
+  --color-brasil-yellow: var(--brasil-yellow);
+  --color-brasil-blue: var(--brasil-blue);
+  --color-brasil-green-light: var(--brasil-green-light);
+  --color-brasil-green-dark: var(--brasil-green-dark);
+  --color-brasil-yellow-light: var(--brasil-yellow-light);
+  --color-brasil-yellow-dark: var(--brasil-yellow-dark);
+  --color-brasil-blue-light: var(--brasil-blue-light);
+  --color-brasil-blue-dark: var(--brasil-blue-dark);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* Utility classes para cores brasileiras */
+@layer utilities {
+  .bg-brasil-green { background-color: var(--brasil-green); }
+  .bg-brasil-yellow { background-color: var(--brasil-yellow); }
+  .bg-brasil-blue { background-color: var(--brasil-blue); }
+  .bg-brasil-green-light { background-color: var(--brasil-green-light); }
+  .bg-brasil-green-dark { background-color: var(--brasil-green-dark); }
+  .bg-brasil-yellow-light { background-color: var(--brasil-yellow-light); }
+  .bg-brasil-yellow-dark { background-color: var(--brasil-yellow-dark); }
+  .bg-brasil-blue-light { background-color: var(--brasil-blue-light); }
+  .bg-brasil-blue-dark { background-color: var(--brasil-blue-dark); }
+  
+  .text-brasil-green { color: var(--brasil-green); }
+  .text-brasil-yellow { color: var(--brasil-yellow); }
+  .text-brasil-blue { color: var(--brasil-blue); }
+  .text-brasil-green-light { color: var(--brasil-green-light); }
+  .text-brasil-green-dark { color: var(--brasil-green-dark); }
+  .text-brasil-yellow-light { color: var(--brasil-yellow-light); }
+  .text-brasil-yellow-dark { color: var(--brasil-yellow-dark); }
+  .text-brasil-blue-light { color: var(--brasil-blue-light); }
+  .text-brasil-blue-dark { color: var(--brasil-blue-dark); }
+  
+  .border-brasil-green { border-color: var(--brasil-green); }
+  .border-brasil-yellow { border-color: var(--brasil-yellow); }
+  .border-brasil-blue { border-color: var(--brasil-blue); }
+  
+  .brasil-gradient-primary {
+    background: linear-gradient(135deg, var(--brasil-green) 0%, var(--brasil-green-light) 100%);
+  }
+  
+  .brasil-gradient-secondary {
+    background: linear-gradient(135deg, var(--brasil-yellow) 0%, var(--brasil-yellow-light) 100%);
+  }
+  
+  .brasil-gradient-accent {
+    background: linear-gradient(135deg, var(--brasil-blue) 0%, var(--brasil-blue-light) 100%);
+  }
+  
+  .brasil-gradient-hero {
+    background: linear-gradient(135deg, var(--brasil-green) 0%, var(--brasil-blue) 50%, var(--brasil-yellow) 100%);
+  }
+  
+  .brasil-gradient-card {
+    background: linear-gradient(145deg, rgba(0, 155, 58, 0.05) 0%, rgba(0, 39, 118, 0.05) 100%);
+  }
+}
