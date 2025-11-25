@@ -1,4 +1,4 @@
-# DB\_SCHEMA.md
+# DB_SCHEMA.md
 
 # Modelo e Estrutura das Tabelas do Banco de Dados
 
@@ -14,7 +14,7 @@ Representa os usuários da plataforma, que podem ser voluntários ou administrad
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único do usuário. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único do usuário. |
 | `nome_completo` | String(100) | | | X | | | Nome completo do usuário. |
 | `cpf` | String(11) | | | X | X | | Cadastro de Pessoa Física. |
 | `email` | String(120) | | | X | X | | Email de login. |
@@ -25,7 +25,7 @@ Representa os usuários da plataforma, que podem ser voluntários ou administrad
 | `data_nasc` | Date | | | X | | | Data de nascimento. |
 | `foto_perfil` | String(255) | | | | | | Caminho para a foto de perfil. |
 | `tipo_usuario` | String(50) | | | X | | "regular" | Tipo de usuário ("regular", "admin" ou "organizacao"). |
-| `criado_em` | DateTime | | | | | current\_timestamp() | Data de criação do registro. |
+| `criado_em` | DateTime | | | | | current_timestamp() | Data de criação do registro. |
 | `conta_ativa` | Boolean | | | | | True | Status da conta. |
 
 ### `organizacao`
@@ -34,7 +34,7 @@ Representa as organizações responsáveis pela criação de oportunidades de vo
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único da organização. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único da organização. |
 | `id_responsavel` | Integer | | X | X | | | FK para `usuario.id` (usuário responsável). |
 | `razao_social` | String(1024) | | | X | | | Nome legal da organização. |
 | `email_institucional` | String(120) | | | X | X | | Email institucional da organização. |
@@ -45,7 +45,7 @@ Representa as organizações responsáveis pela criação de oportunidades de vo
 | `contato` | String(11) | | | X | | | Telefone de contato. |
 | `documento` | String(255) | | | | | | Caminho para o documento de registro. |
 | `foto_org` | String(255) | | | | | | Caminho para a foto da organização. |
-| `criado_em` | DateTime | | | | | current\_timestamp() | Data de criação do registro. |
+| `criado_em` | DateTime | | | | | current_timestamp() | Data de criação do registro. |
 | `aprovada` | Enum | | | X | | "pendente" | Status de aprovação da organização ("pendente", "aprovada", "rejeitada"). |
 
 ### `oportunidade`
@@ -54,7 +54,7 @@ Detalhes sobre as oportunidades de voluntariado publicadas pelas organizações.
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único da oportunidade. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único da oportunidade. |
 | `id_organizacao` | Integer | | X | X | | | FK para `organizacao.id`. |
 | `titulo` | String(255) | | | X | | | Título da oportunidade. |
 | `descricao` | String(2048) | | | X | | | Descrição detalhada. |
@@ -66,7 +66,7 @@ Detalhes sobre as oportunidades de voluntariado publicadas pelas organizações.
 | `foto_local` | String(255) | | | | | | Caminho para a foto do local. |
 | `tags` | String(512) | | | | | | Tags de categorização (string serializada). |
 | `status` | Enum | | | X | | "aberta" | Status da oportunidade ("aberta", "fechada", "cancelada"). |
-| `criado_em` | DateTime | | | | | current\_timestamp() | Data de criação do registro. |
+| `criado_em` | DateTime | | | | | current_timestamp() | Data de criação do registro. |
 
 ### `habilidade`
 
@@ -74,7 +74,7 @@ Lista de habilidades que podem ser associadas a voluntários e oportunidades.
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único da habilidade. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único da habilidade. |
 | `nome` | String(100) | | | X | X | | Nome da habilidade (ex: "Comunicação", "Organização"). |
 
 ### `inscricao`
@@ -83,23 +83,42 @@ Registro da inscrição de um voluntário em uma oportunidade.
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único da inscrição. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único da inscrição. |
 | `id_usuario` | Integer | | X | X | | | FK para `usuario.id` (voluntário). |
 | `id_oportunidade` | Integer | | X | X | | | FK para `oportunidade.id`. |
-| `data_inscricao` | DateTime | | | | | current\_timestamp() | Data da inscrição. |
+| `data_inscricao` | DateTime | | | | | current_timestamp() | Data da inscrição. |
 | `status_inscricao` | Enum | | | X | | "pendente" | Status da inscrição ("pendente", "aprovado", "rejeitado"). |
 | `data_aprovacao_recusa` | DateTime | | | | | | Data de aprovação ou recusa. |
 
-### `registro_presenca`\n\nRegistro de presença do voluntário na atividade.\n\n| Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| `id` | Integer | X | | X | | auto\_inc | Identificador único do registro. |\n| `id_inscricao` | Integer | | X | X | X | | FK para `inscricao.id` (1:1). |\n| `codigo_validacao_pin` | String(100) | | | X | | | PIN ou código para validação de presença. |\n| `check_in_hora` | DateTime | | | | | current\_timestamp() | Hora do check-in. |\n| `check_out_hora` | DateTime | | | | | | Hora do check-out (opcional). |\n\n### `historico_servico`\n\nRegistro de validação e histórico de serviço prestado pela Organização.\n\n| Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| `id` | Integer | X | | X | | auto\_inc | Identificador único do histórico. |\n| `id_inscricao` | Integer | | X | X | X | | FK para `inscricao.id` (1:1). |\n| `horas_confirmadas` | Integer | | | X | | | Horas de serviço confirmadas. |\n| `data_validacao` | DateTime | | | X | | current\_timestamp() | Data em que a Organização validou o serviço. |\n| `certificado_url` | String(255) | | | | | | URL do certificado gerado. |\n\n---\n\n## Tabelas de Relacionamento (M:N)
+### `registro_presenca`
+Registro de presença do voluntário na atividade.
+| Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `id` | Integer | X | | X | | auto_inc | Identificador único do registro. |
+| `id_inscricao` | Integer | | X | X | X | | FK para `inscricao.id` (1:1). |
+| `codigo_validacao_pin` | String(100) | | | X | | | PIN ou código para validação de presença. |
+| `check_in_hora` | DateTime | | | | | current_timestamp() | Hora do check-in. |
+| `check_out_hora` | DateTime | | | | | | Hora do check-out (opcional). |
+### `historico_servico`
+Registro de validação e histórico de serviço prestado pela Organização.
+| Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `id` | Integer | X | | X | | auto_inc | Identificador único do histórico. |
+| `id_inscricao` | Integer | | X | X | X | | FK para `inscricao.id` (1:1). |
+| `horas_confirmadas` | Integer | | | X | | | Horas de serviço confirmadas. |
+| `data_validacao` | DateTime | | | X | | current_timestamp() | Data em que a Organização validou o serviço. |
+| `certificado_url` | String(255) | | | | | | URL do certificado gerado. |
+---
+## Tabelas de Relacionamento (M:N)
 
 Registro de presença do voluntário na atividade.
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único do registro. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único do registro. |
 | `id_inscricao` | Integer | | X | X | X | | FK para `inscricao.id` (1:1). |
 | `codigo_validacao_pin` | String(100) | | | X | | | PIN ou código para validação de presença. |
-| `check_in_hora` | DateTime | | | | | current\_timestamp() | Hora do check-in. |
+| `check_in_hora` | DateTime | | | | | current_timestamp() | Hora do check-in. |
 | `check_out_hora` | DateTime | | | | | | Hora do check-out (opcional). |
 
 ---
@@ -112,7 +131,7 @@ Associa voluntários a habilidades.
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único. |
 | `id_usuario` | Integer | | X | X | X (com `id_habilidade`) | | FK para `usuario.id`. |
 | `id_habilidade` | Integer | | X | X | X (com `id_usuario`) | | FK para `habilidade.id`. |
 
@@ -122,7 +141,7 @@ Associa oportunidades a habilidades (requisitos).
 
 | Coluna | Tipo | PK | FK | Not Null | Unique | Default | Descrição |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `id` | Integer | X | | X | | auto\_inc | Identificador único. |
+| `id` | Integer | X | | X | | auto_inc | Identificador único. |
 | `id_oportunidade` | Integer | | X | X | X (com `id_habilidade`) | | FK para `oportunidade.id`. |
 | `id_habilidade` | Integer | | X | X | X (com `id_oportunidade`) | | FK para `habilidade.id`. |
 
@@ -136,7 +155,8 @@ Associa oportunidades a habilidades (requisitos).
 | `oportunidade` | `id_organizacao` | `organizacao` | `id` | N:1 |
 | `inscricao` | `id_usuario` | `usuario` | `id` | N:1 |
 | `inscricao` | `id_oportunidade` | `oportunidade` | `id` | N:1 |
-| `registro_presenca` | `id_inscricao` | `inscricao` | `id` | 1:1 |\n| `historico_servico` | `id_inscricao` | `inscricao` | `id` | 1:1 |
+| `registro_presenca` | `id_inscricao` | `inscricao` | `id` | 1:1 |
+| `historico_servico` | `id_inscricao` | `inscricao` | `id` | 1:1 |
 | `voluntario_habilidade` | `id_usuario` | `usuario` | `id` | N:1 (M:N via tabela intermediária) |
 | `voluntario_habilidade` | `id_habilidade` | `habilidade` | `id` | N:1 (M:N via tabela intermediária) |
 | `oportunidade_habilidade` | `id_oportunidade` | `oportunidade` | `id` | N:1 (M:N via tabela intermediária) |
