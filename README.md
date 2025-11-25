@@ -6,183 +6,146 @@
   <img src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white"/>
   <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E"/>
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Git-E34F26?style=for-the-badge&logo=git&logoColor=white"/>
+  <img src="https://img-shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
 </p>
 
-
-**AMI** é uma plataforma de **inovação e tecnologia social** que conecta jovens a oportunidades de **voluntariado local e microtarefas comunitárias**.  
-O projeto foi desenvolvido como parte da disciplina de **Inovação e Tecnologia Social** do Instituto Federal, com o objetivo de tornar o engajamento cívico mais acessível, rápido e significativo.
+**AMI** é uma plataforma de **inovação e tecnologia social** desenvolvida para conectar jovens a oportunidades de **voluntariado local e microtarefas comunitárias** [1]. O projeto visa tornar o engajamento cívico mais acessível, rápido e significativo, fortalecendo laços comunitários e incentivando o protagonismo juvenil.
 
 ---
 
-## Índice 
-- [Objetivo do Projeto](#objetivo-do-projeto)
-- [Funcionalidades Principais](#funcionalidades-principais)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Instalação]()
-- [Rodando o Projeto]()
-- [Equipe](#equipe)
-- [Metodologia](#metodologia)
-- [Trabalhos Relacionados](#trabalhos-relacionados)
-- [Licença](#licença)
+## Índice
 
+*   [Objetivo do Projeto](#objetivo-do-projeto)
+*   [Arquitetura e Tecnologias](#arquitetura-e-tecnologias)
+*   [Funcionalidades Principais](#funcionalidades-principais)
+*   [Documentação Detalhada](#documentação-detalhada)\n    *   [Especificação de Requisitos](#especificação-de-requisitos)
+    *   [Endpoints da API (Backend)](#endpoints-da-api-backend)
+    *   [Esquema do Banco de Dados](#esquema-do-banco-de-dados)
+*   [Instalação e Execução](#instalação-e-execução)
+*   [Licença](#licença)
 
+---
 
 ## Objetivo do Projeto
 
-Facilitar a conexão entre **ONGs e/ou instituições locais e jovens voluntários**, criando um espaço digital para divulgar ações sociais curtas (1–3 horas) e incentivar o protagonismo juvenil.
+O principal objetivo do AMI é facilitar a conexão entre **ONGs e/ou instituições locais e jovens voluntários**, criando um espaço digital para divulgar ações sociais curtas (1–3 horas) [1].
 
 **Principais metas:**
-- Tornar o voluntariado mais acessível e flexível.
-- Criar um histórico digital de ações voluntárias.
-- Reconhecer o engajamento dos jovens com selos e badges.
-- Fortalecer laços comunitários e impacto social local.
+
+*   Tornar o voluntariado mais acessível e flexível.
+*   Criar um histórico digital de ações voluntárias.
+*   Reconhecer o engajamento dos jovens com selos e *badges*.
+*   Fortalecer laços comunitários e impacto social local.
+
+---
+
+## Arquitetura e Tecnologias
+
+O AMI adota uma arquitetura de aplicação web moderna, dividida em *backend* e *frontend* [2].
+
+| Camada | Tecnologia | Descrição |
+| :--- | :--- | :--- |
+| **Backend** | Python (Flask) | Responsável pela lógica de negócios, autenticação, e exposição da API REST. |
+| **Banco de Dados** | MySQL + SQLAlchemy | Utilizado para persistência de dados, com SQLAlchemy como ORM para mapeamento objeto-relacional. |
+| **Frontend** | React + Vite | Interface de usuário desenvolvida com React para uma experiência dinâmica e rápida, utilizando Vite para *bundling*. |
+| **Autenticação** | JWT (JSON Web Tokens) | Utilizado para autenticação segura e controle de acesso às rotas protegidas da API. |
 
 ---
 
 ## Funcionalidades Principais
 
-- Cadastro e autenticação de usuários (voluntários e organizações).  
-- Publicação de oportunidades de voluntariado.  
-- Busca e filtros por comunidade, tipo de ação e tempo disponível.  
-- Inscrição e confirmação em atividades.  
-- Registro de presença (check-in) via QR code.  
-- Histórico e sistema de badges.  
-- Painel administrativo para moderação e relatórios.  
-- Notificações e mural comunitário.
+O sistema AMI suporta as seguintes funcionalidades principais, que se alinham com o objetivo de conectar voluntários e organizações [1]:
+
+| Módulo | Funcionalidades |
+| :--- | :--- |
+| **Usuários** | Cadastro e autenticação de usuários (voluntários e organizações). |
+| **Oportunidades** | Publicação, busca e filtros de oportunidades de voluntariado por comunidade, tipo de ação e tempo disponível. |
+| **Inscrições** | Inscrição de voluntários em atividades e confirmação de participação. |
+| **Presença** | Registro de presença (*check-in*) em atividades (mencionado no `inscricao.py` via `RegistroPresenca`). |
+| **Habilidades** | Gerenciamento de habilidades de voluntários e requisitos de oportunidades. |
+| **Histórico** | Histórico de ações e sistema de *badges* (mencionado no `README.md` original). |
 
 ---
 
-## Tecnologias Utilizadas
+## Documentação Detalhada
 
-| Camada | Ferramenta |
-|--------|-------------|
-| **Backend** | Python (Flask) |
-| **Frontend** | React + Vite |
-| **Banco de Dados** | MySQL + SQLAlchemy |
-| **Prototipação** | [Figma](https://www.figma.com/make/6G077fFrGAR3Ava8mbK2dj/Ami---Conectando-jovens--moldando-o-futuro?node-id=0-1&p=f&t=Lw8g1gABCKEl7a5J-0) |
-| **Controle de Versão** | Git / GitHub |
-| **Outros** | HTML5, CSS3, JWT, Flask-WTF |
+Para detalhes técnicos aprofundados, consulte os documentos dedicados:
 
+### Especificação de Requisitos\n\nOs Requisitos Funcionais e Não Funcionais do sistema estão detalhados em:\n\n> [**AMI\_REQUISITOS.md**](./docs/AMI_REQUISITOS.md)\n\n### Endpoints da API (Backend)
+
+O *backend* expõe uma API RESTful para todas as operações do sistema. Detalhes sobre rotas, métodos HTTP, corpos de requisição e respostas estão disponíveis em:
+
+> [**API\_ENDPOINTS.md**](./docs/API_ENDPOINTS.md)
+
+### Esquema do Banco de Dados
+
+O modelo de dados, incluindo tabelas, colunas, tipos e relacionamentos, é detalhado em:
+
+> [**DB\_SCHEMA.md**](./docs/DB_SCHEMA.md)
 
 ---
 
-## Instalação
+## Instalação e Execução
 
-### **Pré-requisitos**
+O projeto é dividido em *backend* (Python/Flask) e *frontend* (React/Vite).
 
-- Python 3.12+
-- MySQL 8.0+
-- Node.js 18+
-- Git
+### Pré-requisitos
 
+*   Python 3.12+
+*   MySQL 8.0+
+*   Node.js 18+
+*   Git
 
 ### Passo a Passo
 
-1. **Clone o repositório:**
-```bash
-  git clone https://github.com/Samuel-fernandesf/Ami.git
-  cd AMI
-```   
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/Samuel-fernandesf/Ami.git
+    cd Ami
+    ```
 
-2. **Instale as dependências do backend:**
-```bash
-  cd app/backend
-  python3 -m venv venv
-  
-  # Linux/MacOS
-  source venv/bin/activate
+2.  **Configuração do Backend (API)**
+    *   Instale as dependências:
+        ```bash
+        cd app/backend
+        python3 -m venv venv
+        source venv/bin/activate  # Linux/MacOS
+        # ./venv/scripts/Activate.ps1  # Windows
+        pip install -r requirements.txt
+        ```
+    *   Configure o banco de dados:
+        *   Crie a base de dados `ami` no MySQL: `CREATE DATABASE ami;`
+        *   Renomeie `.env.example` para `.env` e configure `SECRET_KEY` e `DATABASE_URL`.
+        *   Execute as migrações: `flask db upgrade`
 
-  # Windows
-  ./venv/scripts/Activate.ps1
+3.  **Configuração do Frontend (Web)**
+    *   Instale as dependências:
+        ```bash
+        cd ../frontend
+        npm install
+        ```
 
-  pip install -r requirements.txt  
-```  
-
-3. **Configure o Ambiente Virtual**
-
-Renomeie o arquivo `.env.example` para `.env` e configure as variáveis de ambiente:
-```python
-  SECRET_KEY="sua_chave_secreta_aqui"
-  DATABASE_URL="mysql://{usuário}:{senha}@localhost:3306/ami"
-```
-
-3. **Configure o Banco de Dados**
-
-Primeiro crie **com o MySQL** uma base de dados de nome `ami`:
-```sql
-  CREATE DATABASE ami;
-```
-
-Após isso, na pasta do backend execute
-```bash
-  flask db upgrade
-```
-
-### Instalando o FrontEnd
-
-1. **Instale as dependências do frontend:**
-```bash
-  cd ../frontend
-  npm install
-```
-
-## Rodando o Projeto
-
-### **Rodando o Backend**
-
-Na pasta `app/backend`, com o ambiente virtual ativado, execute:
-```bash
-  flask run
-```
-O backend estará disponível em [http://127.0.0.1:5000](http://127.0.0.1:5000)
-
-
-### **Rodando o Frontend**
-Na pasta `app/frontend`, execute:
-```bash
-  npm run dev
-```
-O frontend estará disponível em [http://127.0.0.1:5173](http://127.0.0.1:5173)
-
-
-
-
-
-
-
-##  Equipe
-
-- **Bernardo Duarte Marcelino** - Estudante de TI (Instituto Federal)
-- **Luiz Gabriel Leli** — Estudante de TI (Instituto Federal)  
-- **Marco Gramari** - Estudante de TI (Instituto Federal)
-- **Samuel Fernandes Filho** - Estudante de TI (Instituto Federal)
-- **Yagor Vitor Silva dos Santos** - Estudante de TI (Instituto Federal)  
-
----
-
-## Metodologia
-
-O projeto adota uma abordagem **socio-técnica**, integrando:
-- **Design centrado no usuário** — escuta ativa de jovens e ONGs locais.  
-- **Desenvolvimento iterativo** — prototipagem rápida e validação contínua.  
-- **Tecnologia social** — soluções digitais que respondem a demandas reais da comunidade.  
-
----
-
-##  Trabalhos Relacionados
-
-- ATADOS. *Atados: rede social de voluntariado.* Disponível em: <https://www.atados.com.br/>.  
-- UNITED NATIONS. *UN Online Volunteering.* Disponível em: <https://www.onlinevolunteering.org/>.  
+4.  **Execução do Projeto**
+    *   **Backend:** Na pasta `app/backend`, com o ambiente virtual ativado, execute:
+        ```bash
+        flask run
+        # Disponível em http://127.0.0.1:5000
+        ```
+    *   **Frontend:** Na pasta `app/frontend`, execute:
+        ```bash
+        npm run dev
+        # Disponível em http://127.0.0.1:5173
+        ```
 
 ---
 
 ## Licença
 
-Este projeto é de caráter **educacional e social**, sem fins lucrativos.  
-Distribuído sob a licença **MIT** — sinta-se à vontade para estudar, adaptar e contribuir.
+Este projeto é distribuído sob a licença **MIT** [1].
 
----
+***
 
-> *"Transformando boas intenções em ações reais — um voluntário por vez."* 🌱
+## Referências
+
+[1] [Samuel-fernandesf/Ami - README.md](https://github.com/Samuel-fernandesf/Ami)
+[2] Análise da estrutura de diretórios do repositório Ami.\n[3] Diagrama Lógico-Relacional v.1.0.png (Documento fornecido pelo usuário).
