@@ -148,10 +148,3 @@ O projeto é dividido em *backend* (Python/Flask) e *frontend* (React/Vite).
 ## Licença
 
 Este projeto é distribuído sob a licença **MIT** [1].
-
-***
-
-## Referências
-
-[1] [Samuel-fernandesf/Ami - README.md](https://github.com/Samuel-fernandesf/Ami)
-[2] Análise da estrutura de diretórios do repositório Ami.\n[3] Diagrama Lógico-Relacional v.1.0.png (Documento fornecido pelo usuário).
