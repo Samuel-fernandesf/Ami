@@ -18,7 +18,8 @@
 *   [Objetivo do Projeto](#objetivo-do-projeto)
 *   [Arquitetura e Tecnologias](#arquitetura-e-tecnologias)
 *   [Funcionalidades Principais](#funcionalidades-principais)
-*   [Documentação Detalhada](#documentação-detalhada)\n    *   [Especificação de Requisitos](#especificação-de-requisitos)
+*   [Documentação Detalhada](#documentação-detalhada)
+    *   [Especificação de Requisitos](#especificação-de-requisitos)
     *   [Endpoints da API (Backend)](#endpoints-da-api-backend)
     *   [Esquema do Banco de Dados](#esquema-do-banco-de-dados)
 *   [Instalação e Execução](#instalação-e-execução)
@@ -71,7 +72,12 @@ O sistema AMI suporta as seguintes funcionalidades principais, que se alinham co
 
 Para detalhes técnicos aprofundados, consulte os documentos dedicados:
 
-### Especificação de Requisitos\n\nOs Requisitos Funcionais e Não Funcionais do sistema estão detalhados em:\n\n> [**AMI\_REQUISITOS.md**](./docs/AMI_REQUISITOS.md)\n\n### Endpoints da API (Backend)
+### Especificação de Requisitos
+Requisitos Funcionais e Não Funcionais do sistema estão detalhados em:
+
+> [**AMI\_REQUISITOS.md**](./docs/AMI_REQUISITOS.md)
+
+### Endpoints da API (Backend)
 
 O *backend* expõe uma API RESTful para todas as operações do sistema. Detalhes sobre rotas, métodos HTTP, corpos de requisição e respostas estão disponíveis em:
 
