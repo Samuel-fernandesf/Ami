@@ -99,9 +99,3 @@ Os Requisitos Não Funcionais especificam os critérios de qualidade e as restri
 | **RNF013** | O sistema deve ser desenvolvido utilizando a linguagem Python e o *framework* Flask para a implementação do *backend* (lógica de API). | Tecnologia | Alta |
 | **RNF014** | A interface de usuário (*frontend*) deve ser desenvolvida utilizando a biblioteca React Vite.js para garantir modularidade. | Tecnologia | Alta |
 | **RNF015** | O banco de dados para armazenamento persistente deve ser o SGBD MySQL junto da ORM SQLAlchemy e para comunicação em tempo real deve usar a biblioteca Flask-socketIO. | Tecnologia | Alta |
-
-***
-
-## Referências
-
-[1] Especificação de Requisitos e Modelo de Dados - AMI.docx (Documento fornecido pelo usuário).
