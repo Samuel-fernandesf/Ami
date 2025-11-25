@@ -14,16 +14,19 @@
 }
 
 .header button {
-  background: none;
-  border: none;
+  background: #2ecc71;       /* VERDE */
+  border: 2px solid #27ae60; /* verde mais escuro pra dar contraste */
   cursor: pointer;
-  color: #333;
+  color: #fff;
   font-weight: bold;
+  padding: 8px 12px;
   transition: 0.2s;
+  border-radius: 0px;        /* quadrado */
 }
 
 .header button:hover {
-  color: #0077cc;
+  background: #27ae60;       /* escurece no hover */
+  border-color: #1e8449;
 }
 
 .logo {

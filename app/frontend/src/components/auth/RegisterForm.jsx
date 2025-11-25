@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useModal } from "../modal/Modal";
 import { useAuth } from "../../contexts/AuthContext";
-import "./AuthForm.css";
+import "./RegisterForm.css";
 
 /* ---------- máscaras e validação de CPF/telefone ---------- */
 const maskCPF = (value) =>

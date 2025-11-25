@@ -1,13 +1,20 @@
 .main {
   text-align: center;
   padding: 60px 20px;
+  background: #ffffff;             /* fundo LIMPO */
+  border-left: 4px solid #2ecc71;  /* detalhe verde chique */
+  border-right: 4px solid #2ecc71; /* equilibra o visual */
 }
 
 .main h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  color: #27ae60;                  /* verde firme, sem gritar */
+  font-weight: 800;
 }
 
 .main p {
-  color: #555;
+  color: #444;                     /* texto neutro */
+  font-size: 1.1rem;
+  line-height: 1.6;
 }

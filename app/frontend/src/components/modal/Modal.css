@@ -1,116 +1,154 @@
-/* ==============================
-   MODAL PRINCIPAL
-   ============================== */
+/* ===========================================
+   OVERLAY
+=========================================== */
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.38);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
   padding: 20px;
-  animation: fadeIn 0.25s ease-out;
+  z-index: 9999;
 }
 
-/* Card do modal */
+/* ===========================================
+   CARD PRINCIPAL
+=========================================== */
+
 .modal-card {
   width: 100%;
   max-width: 520px;
   background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.30);
   overflow: hidden;
-  outline: none;
   display: flex;
   flex-direction: column;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-
-  /* Evita o “pula-pula” entre telas */
-  min-height: 480px;   /* altura mínima */
-  max-height: 520px;   /* altura máxima */
+  animation: fadeIn 0.25s ease-out;
 }
 
-/* Cabeçalho */
+/* ===========================================
+   CABEÇALHO
+=========================================== */
+
 .modal-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid #eee;
-  background: #fafafa;
+  justify-content: center;   /* <--- ALINHA O TOGGLE NO CENTRO */
+  padding: 14px 18px;
+  background: #f0fff0;
+  border-bottom: 1px solid #ddf2dd;
+  position: relative;        /* permite posicionar o botão X */
 }
 
-/* Toggle entre Login / Cadastro */
-.modal-toggle {
-  display: inline-flex;
-  background: #f0f0f0;
-  border-radius: 9999px;
-  padding: 4px;
-  gap: 4px;
-}
-
-.toggle-btn {
-  border: none;
-  background: transparent;
-  padding: 8px 14px;
-  border-radius: 9999px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #444;
-  transition: background 0.15s, color 0.15s;
-}
-
-.toggle-btn.active {
-  background: #0077cc;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-/* Botão de fechar */
+/* Botão X alinhado sem afetar o centro */
 .modal-close {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
   background: transparent;
-  font-size: 20px;
+  font-size: 24px;
+  padding: 3px;
   cursor: pointer;
-  color: #666;
-  padding: 6px 8px;
-  transition: transform 0.15s ease;
+  color: #444;
+  transition: 0.2s;
 }
+
 .modal-close:hover {
-  transform: scale(1.1);
+  transform: translateY(-50%) scale(1.2);
 }
 
-/* Corpo do modal */
-.modal-body {
+/* ===========================================
+   TOGGLE (LOGIN / REGISTER) — FIQUEM QUADRADOS
+=========================================== */
+
+.modal-toggle {
+  display: flex;
+  gap: 10px;
+
+  /* sem pílula, sem cápsula, sem radius */
+  padding: 0;
+  background: transparent;
+  border: none;
+
+  width: 100%;
+  max-width: 320px; /* largura perfeita e fixa */
+}
+
+/* botões realmente quadrados */
+.toggle-btn {
   flex: 1;
-  padding: 18px;
-  overflow-y: auto; /* rolagem caso o conteúdo ultrapasse o limite */
+
+  padding: 10px 0;
+  font-size: 1rem;
+  font-weight: 700;
+
+  background: #ffffff;
+  border: 2px solid #2ecc71;
+  border-radius: 6px;
+
+  color: #2ecc71;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-/* Animação de entrada */
+/* Ativo */
+.toggle-btn.active {
+  background: #2ecc71;
+  color: white;
+  border-color: #28b765;
+  box-shadow: 0 4px 10px rgba(46, 204, 112, 0.35);
+}
+
+/* Hover */
+.toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+
+/* ===========================================
+   CORPO
+=========================================== */
+
+.modal-body {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+
+  display: flex;
+  justify-content: center;
+}
+
+/* ===========================================
+   ANIMAÇÃO
+=========================================== */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 
-/* Responsividade */
+/* ===========================================
+   MOBILE
+=========================================== */
+
 @media (max-width: 480px) {
   .modal-card {
-    max-width: 90%;
-    min-height: 440px;
+    max-width: 92%;
   }
 
-  .toggle-btn {
-    padding: 6px 10px;
-    font-size: 0.9rem;
+  .modal-toggle {
+    max-width: 100%;
   }
 }

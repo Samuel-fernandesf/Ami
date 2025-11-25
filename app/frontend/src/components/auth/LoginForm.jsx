@@ -62,16 +62,8 @@ export default function LoginForm({ firstInputRef }) {
       {error && <small className="error">{error}</small>}
 
       <div style={{ marginTop: 12 }}>
-        <button type="submit" disabled={loading}>
+        <button type="submit" class="btn-primary" disabled={loading}>
           {loading ? "Entrando..." : "Entrar"}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => switchTo("register")}
-          style={{ marginLeft: 8 }}
-        >
-          Criar conta
         </button>
       </div>
     </form>

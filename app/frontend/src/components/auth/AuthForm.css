@@ -1,148 +1,134 @@
-/* ==============================
-   FORMULÁRIOS DE LOGIN / CADASTRO
-   ============================== */
+/* ===========================================
+   FORM WRAPPER
+=========================================== */
 
-.login-form,
-.register-form {
+.login-form {
+  width: 100%;
+  max-width: 360px;
+
+  background: #ffffffee;
+  backdrop-filter: blur(8px);
+
+  padding: 2.3rem 2rem;
+  border-radius: 18px;
+
+  border: 2px solid #2ecc7080;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  color: #222;
-  padding: 12px 4px 4px;
-  width: 100%;
-  box-sizing: border-box;
-  animation: fadeIn 0.25s ease;
+  gap: 1.2rem;
+
+  font-family: "Inter", sans-serif;
+
+  animation: popIn 0.35s ease-out;
 }
 
-/* Títulos */
-.login-form h2,
-.register-form h2 {
+/* ===========================================
+   TÍTULO
+=========================================== */
+
+.login-form h2 {
   text-align: center;
-  margin-bottom: 8px;
-  font-size: 1.3rem;
-  color: #333;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #2ecc71;
+  margin-bottom: 0.5rem;
 }
 
-/* Indicador de etapa */
-.step-indicator {
-  text-align: center;
+/* ===========================================
+   LABEL
+=========================================== */
+
+.login-form label {
   font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 8px;
+  color: #2f2f2f;
+  font-weight: 600;
 }
 
-/* Labels */
-.login-form label,
-.register-form label {
-  font-weight: 500;
-  font-size: 0.95rem;
-  margin-top: 4px;
-  color: #333;
-}
+/* ===========================================
+   INPUT
+=========================================== */
 
-/* Inputs e selects */
-.login-form input,
-.register-form input,
-.register-form select,
-.register-form textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  box-sizing: border-box;
+.login-form input {
+  padding: 0.8rem;
+  border-radius: 12px;
+
+  border: 2px solid #d8ffd8;
+  background: #ffffffcc;
+  font-size: 1rem;
+
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: 0.2s ease;
 }
 
-.login-form input:focus,
-.register-form input:focus {
-  border-color: #0077cc;
-  box-shadow: 0 0 3px rgba(0, 119, 204, 0.3);
+.login-form input:focus {
+  border-color: #2ecc71;
+  background: #f6fff6;
+  box-shadow: 0 0 7px #2ecc7144;
 }
 
-/* Fieldsets e checkboxes */
-.register-form fieldset {
-  border: 1px solid #e4e4e4;
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-}
-.register-form legend {
-  font-size: 0.9rem;
-  color: #333;
-  font-weight: 600;
-  padding: 0 6px;
-}
+/* ===========================================
+   BOTÕES
+=========================================== */
 
-/* Botões */
-.login-form button,
-.register-form button {
-  padding: 10px 16px;
+.login-form button {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+
   border: none;
-  border-radius: 8px;
-  background-color: #0077cc;
-  color: #fff;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
+
   cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.25s, transform 0.15s;
-  margin-top: 4px;
+  transition: 0.25s ease;
 }
 
-.login-form button:hover,
-.register-form button:hover {
-  background-color: #0062ad;
-  transform: scale(1.02);
+/* Principal */
+.login-form .btn-primary {
+  background: #2ecc71;
+  color: white;
 }
 
-.login-form button:disabled,
-.register-form button:disabled {
-  background-color: #b3b3b3;
-  cursor: not-allowed;
+.login-form .btn-primary:hover {
+  background: #28b765;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 204, 112, 0.4);
 }
 
-/* Erros e mensagens */
-.error {
-  color: #c62828;
+/* Secundário (Criar conta) */
+.login-form .btn-secondary {
+  background: #ffffff;
+  color: #2ecc71;
+  border: 2px solid #2ecc71;
+}
+
+.login-form .btn-secondary:hover {
+  background: #2ecc71;
+  color: white;
+}
+
+/* ===========================================
+   ERRO
+=========================================== */
+
+.login-form .error {
+  color: #ff4b4b;
   font-size: 0.85rem;
-  margin-top: -4px;
-  margin-bottom: 4px;
-  display: block;
+  margin-top: -6px;
 }
 
-.register-form p {
-  font-size: 0.9rem;
-  color: #555;
-}
+/* ===========================================
+   ANIMAÇÃO
+=========================================== */
 
-/* Animação suave ao entrar */
-@keyframes fadeIn {
+@keyframes popIn {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(14px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsividade */
-@media (max-width: 480px) {
-  .login-form,
-  .register-form {
-    padding: 8px;
-  }
-
-  .login-form h2,
-  .register-form h2 {
-    font-size: 1.15rem;
-  }
-
-  .login-form button,
-  .register-form button {
-    font-size: 0.9rem;
-    padding: 9px 12px;
+    transform: translateY(0) scale(1);
   }
 }
