@@ -35,7 +35,7 @@ Ao rodar o *backend* com `flask run`, a API estará disponível em `http://127.0
 
 **Corpo da Requisição:**
 
-```json
+```js
 {
   "email": "email@example.com",
   "senha": "password"
@@ -44,7 +44,7 @@ Ao rodar o *backend* com `flask run`, a API estará disponível em `http://127.0
 
 **Resposta Esperada (Sucesso):**
 
-```json
+```js
 {
   "token": "token-jwt-aqui",
   "user": {
@@ -79,7 +79,7 @@ Rotas relacionadas ao CRUD de usuários voluntários.
 
 **Corpo da Requisição:**
 
-```json
+```js
 {
   "nome_completo": "Nome Completo",
   "cpf": "12345678900",
@@ -114,7 +114,7 @@ Rotas relacionadas ao CRUD de organizações.
 
 **Corpo da Requisição:**
 
-```json
+```js
 {
   "id_responsavel": 1, // ID do usuário que está cadastrando a organização
   "razao_social": "ONG Exemplo Social",
@@ -147,7 +147,7 @@ Rotas relacionadas ao CRUD de oportunidades de voluntariado.
 
 **Corpo da Requisição:**
 
-```json
+```js
 {
   "titulo": "Mutirão de Limpeza",
   "descricao": "Ajuda na limpeza de um parque local.",
@@ -181,7 +181,7 @@ Rotas relacionadas ao gerenciamento de inscrições de voluntários em oportunid
 
 **Corpo da Requisição (Admin):**
 
-```json
+```js
 {
   "status_inscricao": "aprovado" // ou "rejeitado"
 }
